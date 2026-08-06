@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เข้าสู่ระบบ | แชทจองที่พักพัทลุง</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   หน้าเข้าสู่ระบบ — แชทจองที่พักพัทลุง
+   มาสคอต 3 ตัว: น้องกัปตัน / น้องกัน / น้องกิต
+   ============================================================ */
+:root{
+  --bg:        #f4f9f4;
+  --bg-panel:  #fdfffd;
+  --green-900: #1e4d36;
+  --green-700: #2e7d54;
+  --green-500: #3a9d6e;
+  --green-300: #7cc79b;
+  --green-100: #dff0e6;
+  --amber:     #e8a13d;
+  --amber-d:   #c9832a;
+  --ink:       #22352b;
+  --ink-soft:  #5d7268;
+  --line:      #d8e6dc;
+  --radius:    18px;
+  --shadow:    0 4px 14px rgba(30,77,54,.10);
+  --shadow-lg: 0 14px 34px rgba(30,77,54,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  font-family:'Sarabun',sans-serif;
+  color:var(--ink);
+  font-size:15px;
+  background:
+    radial-gradient(circle at 15% 20%, #e2f2e8 0, transparent 45%),
+    radial-gradient(circle at 85% 80%, #e8f4ec 0, transparent 45%),
+    var(--bg);
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px 18px;
+  overflow-x:hidden;
+  position:relative;
+}
+h1,h2,h3,h4,.font-display{font-family:'Prompt',sans-serif}
+
+/* ---------- ใบไม้ลอยพื้นหลัง ---------- */
+.leaf{
+  position:fixed;font-size:24px;opacity:.28;pointer-events:none;user-select:none;
+  animation:floatLeaf linear infinite;z-index:0;
+}
+@keyframes floatLeaf{
+  0%{transform:translateY(110vh) rotate(0deg)}
+  100%{transform:translateY(-15vh) rotate(360deg)}
+}
+
+/* ---------- เลย์เอาต์หลัก ---------- */
+.wrap{
+  width:100%;max-width:1020px;
+  display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:center;
+  position:relative;z-index:1;
+  transition:opacity .5s ease, transform .5s ease;
+}
+body.leaving .wrap{opacity:0;transform:scale(.94) translateY(-14px)}
+
+/* ---------- ฝั่งมาสคอต ---------- */
+.stage{display:flex;flex-direction:column;align-items:center;gap:6px}
+.brand{text-align:center;margin-bottom:4px}
+.brand h1{font-size:24px;color:var(--green-900);line-height:1.3}
+.brand p{font-size:13.5px;color:var(--ink-soft);margin-top:4px}
+
+/* บับเบิลคำพูด */
+.bubble{
+  background:var(--bg-panel);border:1.5px solid var(--line);
+  border-radius:20px;padding:14px 20px;
+  font-family:'Prompt',sans-serif;font-size:15px;color:var(--green-900);
+  box-shadow:var(--shadow);position:relative;
+  max-width:420px;text-align:center;min-height:56px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .25s ease, background .25s ease, border-color .25s ease;
+}
+.bubble::after{
+  content:'';position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);
+  border:11px solid transparent;border-top-color:var(--bg-panel);border-bottom:0;
+}
+.bubble::before{
+  content:'';position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);
+  border:12px solid transparent;border-top-color:var(--line);border-bottom:0;
+}
+.bubble.pop{animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.9)}55%{transform:scale(1.05)}100%{transform:scale(1)}}
+.bubble.warn{background:#fdf1ee;border-color:#f0c8bd;color:#a13a2a}
+.bubble.warn::after{border-top-color:#fdf1ee}
+.bubble.warn::before{border-top-color:#f0c8bd}
+.bubble.good{background:var(--green-100);border-color:var(--green-300);color:var(--green-900)}
+.bubble.good::after{border-top-color:var(--green-100)}
+.bubble.good::before{border-top-color:var(--green-300)}
+
+/* แถวมาสคอต */
+.mascots{display:flex;align-items:flex-end;justify-content:center;gap:6px;margin-top:14px}
+.mascot{display:flex;flex-direction:column;align-items:center;gap:2px}
+.mascot svg{display:block;overflow:visible}
+.mascot .nametag{
+  font-family:'Prompt',sans-serif;font-size:12.5px;font-weight:600;
+  background:var(--bg-panel);border:1px solid var(--line);
+  padding:2px 12px;border-radius:99px;color:var(--green-900);
+  box-shadow:0 2px 6px rgba(30,77,54,.08);
+}
+/* ตัวกลาง (กัปตัน) ใหญ่กว่าเพื่อน */
+.mascot.lead svg{width:150px;height:196px}
+.mascot.side svg{width:118px;height:154px}
+
+/* เด้งเบาๆ ตลอดเวลา */
+.body-g{transform-box:fill-box;transform-origin:50% 100%;animation:idleBob 3.4s ease-in-out infinite}
+.mascot.side:nth-child(1) .body-g{animation-delay:-.6s}
+.mascot.side:nth-child(3) .body-g{animation-delay:-1.4s}
+@keyframes idleBob{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-5px) scaleY(1.012)}}
+
+/* กะพริบตา */
+.lid{transform-box:fill-box;transform-origin:50% 0%;transform:scaleY(0);animation:blink 5.2s infinite}
+.mascot.side:nth-child(1) .lid{animation-delay:-2.1s}
+.mascot.side:nth-child(3) .lid{animation-delay:-3.7s}
+@keyframes blink{0%,94%,100%{transform:scaleY(0)}96%,98%{transform:scaleY(1)}}
+/* ตอนปิดตา (กรอกรหัสผ่าน) ให้หลับตาค้าง */
+.shy .lid{animation:none;transform:scaleY(1)}
+.hands{opacity:0;transform:translateY(16px);transition:opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1)}
+.shy .hands{opacity:1;transform:translateY(0)}
+.shy .pupil{opacity:0}
+
+/* โบกมือ */
+.arm-wave{transform-box:fill-box;transform-origin:50% 12%}
+.waving .arm-wave{animation:wave .55s ease-in-out 4}
+@keyframes wave{
+  0%,100%{transform:rotate(0deg)}
+  25%{transform:rotate(-34deg)}
+  50%{transform:rotate(6deg)}
+  75%{transform:rotate(-28deg)}
+}
+.waving .body-g{animation:happyHop .55s ease-in-out 4}
+@keyframes happyHop{0%,100%{transform:translateY(0)}45%{transform:translateY(-12px)}}
+
+/* ---------- การ์ดฟอร์ม ---------- */
+.card{
+  background:var(--bg-panel);border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  padding:26px 24px;position:relative;overflow:hidden;
+}
+.card h2{font-size:20px;color:var(--green-900);margin-bottom:3px}
+.card .sub{font-size:13px;color:var(--ink-soft);margin-bottom:18px}
+
+/* แท็บสลับ */
+.tabs{
+  display:flex;background:var(--green-100);border-radius:99px;padding:4px;
+  margin-bottom:20px;position:relative;
+}
+.tabs .slider{
+  position:absolute;top:4px;left:4px;width:calc(50% - 4px);height:calc(100% - 8px);
+  background:var(--green-700);border-radius:99px;
+  transition:transform .32s cubic-bezier(.34,1.4,.64,1);
+  box-shadow:0 3px 10px rgba(30,77,54,.25);
+}
+.tabs.reg .slider{transform:translateX(100%)}
+.tabs button{
+  flex:1;position:relative;z-index:1;background:none;border:none;cursor:pointer;
+  font-family:'Prompt',sans-serif;font-size:14px;font-weight:500;
+  padding:9px 0;color:var(--green-900);transition:color .25s;
+}
+.tabs button.active{color:#fff}
+
+.field{margin-bottom:13px}
+.field label{
+  display:block;font-size:13px;font-weight:600;color:var(--green-900);
+  margin-bottom:5px;font-family:'Prompt',sans-serif;
+}
+.input-wrap{position:relative;display:flex;align-items:center}
+.field input{
+  width:100%;border:1.5px solid var(--line);border-radius:12px;
+  padding:11px 14px;font-family:'Sarabun',sans-serif;font-size:14.5px;
+  background:#fdfffd;color:var(--ink);transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus{
+  outline:none;border-color:var(--green-500);
+  box-shadow:0 0 0 3px rgba(58,157,110,.18);
+}
+.field input.has-eye{padding-right:46px}
+.eye-btn{
+  position:absolute;right:8px;background:none;border:none;cursor:pointer;
+  font-size:17px;padding:5px 7px;border-radius:9px;line-height:1;
+  transition:background .18s, transform .18s;
+}
+.eye-btn:hover{background:var(--green-100);transform:scale(1.1)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;
+  font-family:'Prompt',sans-serif;font-size:15px;font-weight:500;
+  background:var(--green-500);color:#fff;border:none;cursor:pointer;
+  padding:12px 18px;border-radius:13px;margin-top:6px;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.btn:hover:not(:disabled){transform:translateY(-3px);box-shadow:var(--shadow-lg);background:var(--green-700)}
+.btn:active:not(:disabled){transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn.ghost{
+  background:transparent;color:var(--green-700);border:1.5px solid var(--green-500);
+  font-size:14px;padding:10px;margin-top:10px;
+}
+.btn.ghost:hover{background:var(--green-100);transform:translateY(-2px)}
+
+.form-msg{font-size:13px;margin-top:10px;display:none;padding:9px 13px;border-radius:11px}
+.form-msg.err{display:block;background:#fbe9e5;color:#a13a2a}
+.form-msg.ok{display:block;background:var(--green-100);color:var(--green-900)}
+
+.conn{
+  font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:14px;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.conn .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1.6s infinite}
+.conn .dot.on{background:var(--green-500)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.pane{display:none}
+.pane.active{display:block;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+/* ---------- ม่านเปลี่ยนหน้า ---------- */
+.curtain{
+  position:fixed;inset:0;background:linear-gradient(160deg,var(--green-700),var(--green-900));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  color:#eaf6ee;font-family:'Prompt',sans-serif;font-size:17px;
+  opacity:0;pointer-events:none;transition:opacity .5s ease;z-index:99;
+}
+.curtain.show{opacity:1;pointer-events:all}
+.curtain .spin{
+  width:42px;height:42px;border:4px solid rgba(255,255,255,.25);
+  border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr;gap:20px;max-width:440px}
+  .stage{order:1}
+  .card{order:2}
+  .mascot.lead svg{width:112px;height:146px}
+  .mascot.side svg{width:88px;height:115px}
+  .brand h1{font-size:20px}
+  .bubble{font-size:14px;padding:12px 16px;min-height:48px}
+}
+@media (max-width:420px){
+  .mascot.lead svg{width:92px;height:120px}
+  .mascot.side svg{width:74px;height:97px}
+  .mascot .nametag{font-size:11px;padding:1px 8px}
+  .mascots{gap:2px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= ม่านเปลี่ยนหน้า ================= -->
+<div class="curtain" id="curtain">
+  <div class="spin"></div>
+  <div id="curtain-text">กำลังพาไปหน้าแชท...</div>
+</div>
+
+<div class="wrap" id="wrap">
+
+  <!-- ================= ฝั่งมาสคอต ================= -->
+  <section class="stage">
+    <div class="brand">
+      <h1>🌿 แชทจองที่พักพัทลุง</h1>
+      <p>ผู้ช่วย AI หาที่พักทั่วเมืองลุง ทะเลน้อย ลำปำ เขาปู่-เขาย่า</p>
+    </div>
+
+    <div class="bubble" id="bubble">สวัสดีครับ! พวกเรารอคุณอยู่เลย 🙏</div>
+
+    <div class="mascots" id="mascots">
+
+      <!-- ========== น้องกัน (ซ้าย) ========== -->
+      <div class="mascot side" data-name="น้องกัน">
+        <svg viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg">
+          <g class="body-g">
+            <!-- แขน -->
+            <rect class="arm-wave" x="16" y="98" width="15" height="46" rx="7.5" fill="#2e7d54"/>
+            <rect x="99" y="98" width="15" height="46" rx="7.5" fill="#2e7d54"/>
+            <!-- ลำตัว -->
+            <rect x="30" y="92" width="70" height="66" rx="26" fill="#3a9d6e"/>
+            <ellipse cx="47" cy="160" rx="13" ry="7" fill="#1e4d36"/>
+            <ellipse cx="83" cy="160" rx="13" ry="7" fill="#1e4d36"/>
+            <!-- ป้ายอก -->
+            <circle cx="65" cy="118" r="11" fill="#dff0e6"/>
+            <text x="65" y="123" font-size="13" text-anchor="middle" font-family="Prompt">🍃</text>
+            <!-- หัว -->
+            <ellipse cx="65" cy="56" rx="41" ry="39" fill="#3a9d6e"/>
+            <!-- ใบไม้บนหัว -->
+            <path d="M65 18 C60 4, 78 2, 79 14 C80 24, 68 24, 65 18Z" fill="#2e7d54"/>
+            <rect x="63" y="15" width="4" height="8" rx="2" fill="#1e4d36"/>
+            <!-- ตา -->
+            <g class="eye"><circle class="white" cx="52" cy="53" r="12" fill="#fdfffd"/>
+              <circle class="pupil" cx="52" cy="53" r="5.5" fill="#22352b" data-max="4.5"/>
+              <rect class="lid" x="40" y="41" width="24" height="24" rx="12" fill="#3a9d6e"/></g>
+            <g class="eye"><circle class="white" cx="78" cy="53" r="12" fill="#fdfffd"/>
+              <circle class="pupil" cx="78" cy="53" r="5.5" fill="#22352b" data-max="4.5"/>
+              <rect class="lid" x="66" y="41" width="24" height="24" rx="12" fill="#3a9d6e"/></g>
+            <!-- ปาก -->
+            <path d="M56 74 Q65 82 74 74" stroke="#1e4d36" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <!-- แก้ม -->
+            <ellipse cx="36" cy="66" rx="6" ry="4" fill="#7cc79b" opacity=".75"/>
+            <ellipse cx="94" cy="66" rx="6" ry="4" fill="#7cc79b" opacity=".75"/>
+            <!-- มือปิดตา -->
+            <g class="hands">
+              <ellipse cx="52" cy="53" rx="15" ry="12" fill="#2e7d54"/>
+              <ellipse cx="78" cy="53" rx="15" ry="12" fill="#2e7d54"/>
+            </g>
+          </g>
+        </svg>
+        <span class="nametag">น้องกัน</span>
+      </div>
+
+      <!-- ========== น้องกัปตัน (กลาง) ========== -->
+      <div class="mascot lead" data-name="น้องกัปตัน">
+        <svg viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg">
+          <g class="body-g">
+            <rect class="arm-wave" x="16" y="98" width="15" height="46" rx="7.5" fill="#1e4d36"/>
+            <rect x="99" y="98" width="15" height="46" rx="7.5" fill="#1e4d36"/>
+            <rect x="30" y="92" width="70" height="66" rx="26" fill="#2e7d54"/>
+            <ellipse cx="47" cy="160" rx="13" ry="7" fill="#123526"/>
+            <ellipse cx="83" cy="160" rx="13" ry="7" fill="#123526"/>
+            <!-- ป้ายชื่อกัปตัน -->
+            <rect x="47" y="106" width="36" height="24" rx="8" fill="#dff0e6"/>
+            <text x="65" y="123" font-size="14" text-anchor="middle" font-family="Prompt">⚓</text>
+            <ellipse cx="65" cy="56" rx="41" ry="39" fill="#2e7d54"/>
+            <!-- หมวกกัปตัน -->
+            <path d="M24 30 Q65 4 106 30 L106 34 Q65 22 24 34 Z" fill="#1e4d36"/>
+            <rect x="20" y="30" width="90" height="11" rx="5.5" fill="#123526"/>
+            <circle cx="65" cy="20" r="5" fill="#e8a13d"/>
+            <!-- ตา -->
+            <g class="eye"><circle class="white" cx="52" cy="55" r="12.5" fill="#fdfffd"/>
+              <circle class="pupil" cx="52" cy="55" r="6" fill="#22352b" data-max="5"/>
+              <rect class="lid" x="39.5" y="42.5" width="25" height="25" rx="12.5" fill="#2e7d54"/></g>
+            <g class="eye"><circle class="white" cx="78" cy="55" r="12.5" fill="#fdfffd"/>
+              <circle class="pupil" cx="78" cy="55" r="6" fill="#22352b" data-max="5"/>
+              <rect class="lid" x="65.5" y="42.5" width="25" height="25" rx="12.5" fill="#2e7d54"/></g>
+            <path d="M55 76 Q65 85 75 76" stroke="#123526" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+            <ellipse cx="36" cy="68" rx="6.5" ry="4.5" fill="#7cc79b" opacity=".7"/>
+            <ellipse cx="94" cy="68" rx="6.5" ry="4.5" fill="#7cc79b" opacity=".7"/>
+            <g class="hands">
+              <ellipse cx="52" cy="55" rx="16" ry="12.5" fill="#1e4d36"/>
+              <ellipse cx="78" cy="55" rx="16" ry="12.5" fill="#1e4d36"/>
+            </g>
+          </g>
+        </svg>
+        <span class="nametag">น้องกัปตัน</span>
+      </div>
+
+      <!-- ========== น้องกิต (ขวา) ========== -->
+      <div class="mascot side" data-name="น้องกิต">
+        <svg viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg">
+          <g class="body-g">
+            <rect class="arm-wave" x="16" y="98" width="15" height="46" rx="7.5" fill="#c9832a"/>
+            <rect x="99" y="98" width="15" height="46" rx="7.5" fill="#c9832a"/>
+            <rect x="30" y="92" width="70" height="66" rx="26" fill="#e8a13d"/>
+            <ellipse cx="47" cy="160" rx="13" ry="7" fill="#8a5d16"/>
+            <ellipse cx="83" cy="160" rx="13" ry="7" fill="#8a5d16"/>
+            <circle cx="65" cy="118" r="11" fill="#fdf3e2"/>
+            <text x="65" y="123" font-size="12" text-anchor="middle" font-family="Prompt">🎒</text>
+            <ellipse cx="65" cy="56" rx="41" ry="39" fill="#e8a13d"/>
+            <!-- เสาอากาศ -->
+            <rect x="63" y="8" width="4" height="14" rx="2" fill="#c9832a"/>
+            <circle cx="65" cy="8" r="6" fill="#3a9d6e"/>
+            <g class="eye"><circle class="white" cx="52" cy="53" r="12" fill="#fdfffd"/>
+              <circle class="pupil" cx="52" cy="53" r="5.5" fill="#22352b" data-max="4.5"/>
+              <rect class="lid" x="40" y="41" width="24" height="24" rx="12" fill="#e8a13d"/></g>
+            <g class="eye"><circle class="white" cx="78" cy="53" r="12" fill="#fdfffd"/>
+              <circle class="pupil" cx="78" cy="53" r="5.5" fill="#22352b" data-max="4.5"/>
+              <rect class="lid" x="66" y="41" width="24" height="24" rx="12" fill="#e8a13d"/></g>
+            <path d="M55 73 Q65 83 75 73" stroke="#8a5d16" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <ellipse cx="36" cy="66" rx="6" ry="4" fill="#fff" opacity=".45"/>
+            <ellipse cx="94" cy="66" rx="6" ry="4" fill="#fff" opacity=".45"/>
+            <g class="hands">
+              <ellipse cx="52" cy="53" rx="15" ry="12" fill="#c9832a"/>
+              <ellipse cx="78" cy="53" rx="15" ry="12" fill="#c9832a"/>
+            </g>
+          </g>
+        </svg>
+        <span class="nametag">น้องกิต</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= การ์ดฟอร์ม ================= -->
+  <section class="card">
+    <div class="tabs" id="tabs">
+      <div class="slider"></div>
+      <button class="active" id="tab-login" onclick="switchTab('login')">เข้าสู่ระบบ</button>
+      <button id="tab-reg" onclick="switchTab('register')">สมัครสมาชิก</button>
+    </div>
+
+    <!-- ---------- เข้าสู่ระบบ ---------- -->
+    <div class="pane active" id="pane-login">
+      <h2>ยินดีต้อนรับกลับมา 🌿</h2>
+      <div class="sub">เข้าสู่ระบบเพื่อคุยกับน้องกัปตันและจองที่พัก</div>
+
+      <div class="field">
+        <label for="li-user">ชื่อผู้ใช้</label>
+        <div class="input-wrap">
+          <input id="li-user" type="text" placeholder="username" autocomplete="username">
+        </div>
+      </div>
+      <div class="field">
+        <label for="li-pass">รหัสผ่าน</label>
+        <div class="input-wrap">
+          <input id="li-pass" type="password" class="has-eye" placeholder="••••••••" autocomplete="current-password">
+          <button class="eye-btn" type="button" onclick="togglePass('li-pass', this)" aria-label="แสดงรหัสผ่าน">👁️</button>
+        </div>
+      </div>
+      <div class="form-msg" id="li-msg"></div>
+      <button class="btn" id="li-btn" onclick="doLogin()">🔓 เข้าสู่ระบบ</button>
+    </div>
+
+    <!-- ---------- สมัครสมาชิก ---------- -->
+    <div class="pane" id="pane-register">
+      <h2>สมัครสมาชิกใหม่ ✨</h2>
+      <div class="sub">สร้างบัญชีเพื่อเริ่มจองที่พักในพัทลุง</div>
+
+      <div class="field">
+        <label for="rg-user">ชื่อผู้ใช้</label>
+        <div class="input-wrap">
+          <input id="rg-user" type="text" placeholder="ตั้งชื่อผู้ใช้" autocomplete="username">
+        </div>
+      </div>
+      <div class="field">
+        <label for="rg-pass">รหัสผ่าน</label>
+        <div class="input-wrap">
+          <input id="rg-pass" type="password" class="has-eye" placeholder="อย่างน้อย 4 ตัวอักษร" autocomplete="new-password">
+          <button class="eye-btn" type="button" onclick="togglePass('rg-pass', this)" aria-label="แสดงรหัสผ่าน">👁️</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="rg-pass2">ยืนยันรหัสผ่าน</label>
+        <div class="input-wrap">
+          <input id="rg-pass2" type="password" class="has-eye" placeholder="พิมพ์รหัสผ่านอีกครั้ง" autocomplete="new-password">
+          <button class="eye-btn" type="button" onclick="togglePass('rg-pass2', this)" aria-label="แสดงรหัสผ่าน">👁️</button>
+        </div>
+      </div>
+      <div class="form-msg" id="rg-msg"></div>
+      <button class="btn" id="rg-btn" onclick="doRegister()">✨ สมัครสมาชิก</button>
+    </div>
+
+    <div class="conn"><span class="dot" id="conn-dot"></span><span id="conn-text">กำลังเชื่อมต่อฐานข้อมูล…</span></div>
+  </section>
+
+</div>
+
+<!-- Firebase CDN (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<script>
+/* ============================================================
+   1) FIREBASE — ใช้โปรเจกต์เดียวกับหน้าแชท (node: users)
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyDTwqatWZq5-5wmJf0JR7r5d2GAGBQ2Qr4",
+  authDomain: "cccc-27d4c.firebaseapp.com",
+  databaseURL: "https://cccc-27d4c-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "cccc-27d4c",
+  storageBucket: "cccc-27d4c.firebasestorage.app",
+  messagingSenderId: "122532968265",
+  appId: "1:122532968265:web:ad7cca59eb8256045b4c98",
+  measurementId: "G-F1H8G1Y2HQ"
+};
+
+const USE_FIREBASE = (typeof firebase !== 'undefined')
+                  && !String(firebaseConfig.apiKey).includes('YOUR_');
+
+let fdb = null;
+let usersCache = [];
+let dbReady = false;
+
+function setConn(text, ok){
+  document.getElementById('conn-text').textContent = text;
+  document.getElementById('conn-dot').classList.toggle('on', !!ok);
+}
+
+let offlineMode = false;
+
+/* สลับไปโหมดสำรอง: อ่านบัญชีจาก localStorage แทน */
+function fallbackToLocal(reason){
+  if(dbReady && !offlineMode) return;   /* ต่อ Firebase ได้แล้ว ไม่ต้องสลับ */
+  offlineMode = true;
+  try{ usersCache = JSON.parse(localStorage.getItem('users')) || [] }catch(e){ usersCache = [] }
+  dbReady = true;
+  setConn('โหมดออฟไลน์ — บัญชีเก็บในเครื่องนี้เท่านั้น', false);
+  if(reason) console.warn('สลับเป็นโหมดออฟไลน์:', reason);
+}
+
+function initDB(){
+  if(USE_FIREBASE){
+    try{
+      firebase.initializeApp(firebaseConfig);
+      fdb = firebase.database();
+
+      fdb.ref('users').on('value', snap => {
+        const v = snap.val();
+        usersCache = v ? (Array.isArray(v) ? v.filter(Boolean) : Object.values(v)) : [];
+        dbReady = true;
+        offlineMode = false;
+      }, err => {
+        /* อ่านไม่ได้ (เช่น Rules ปิดอยู่) → อย่าปล่อยให้ค้าง */
+        fallbackToLocal('อ่าน users ไม่สำเร็จ: ' + err.message);
+        setConn('อ่านฐานข้อมูลไม่ได้ (เช็ค Rules) — ใช้โหมดออฟไลน์', false);
+      });
+
+      if(fdb && !offlineMode){
+        fdb.ref('.info/connected').on('value', s => {
+          if(offlineMode) return;
+          setConn(s.val() ? 'เชื่อมต่อฐานข้อมูลแล้ว ☁️' : 'กำลังเชื่อมต่อใหม่…', s.val());
+        });
+      }
+
+      /* กันค้าง: ถ้า 7 วินาทีแล้วยังไม่ได้ข้อมูลก้อนแรก ให้ใช้โหมดสำรองไปก่อน
+         (ไม่งั้นผู้ใช้จะกดล็อกอินไม่ได้เลยเมื่อเน็ตมีปัญหา) */
+      setTimeout(() => {
+        if(!dbReady) fallbackToLocal('หมดเวลารอ Firebase (7 วินาที)');
+      }, 7000);
+      return;
+    }catch(e){
+      console.warn('Firebase ใช้ไม่ได้ → สลับเป็นโหมดออฟไลน์', e);
+    }
+  }
+  fallbackToLocal('ไม่พบ Firebase SDK');
+}
+
+function saveUsers(list){
+  usersCache = list;
+  if(USE_FIREBASE && fdb && !offlineMode){
+    fdb.ref('users').set(list).catch(err => {
+      console.warn('เขียน users ขึ้น Firebase ไม่สำเร็จ:', err);
+      localStorage.setItem('users', JSON.stringify(list));   /* สำรองไว้ในเครื่อง */
+    });
+  }else{
+    localStorage.setItem('users', JSON.stringify(list));
+  }
+}
+
+/* ============================================================
+   2) มาสคอต — ตามองตามเมาส์ / ปิดตา / โบกมือ
+   ============================================================ */
+const mascotEls = [...document.querySelectorAll('.mascot')];
+const eyeParts = [...document.querySelectorAll('.eye')].map(g => {
+  const white = g.querySelector('.white');
+  const pupil = g.querySelector('.pupil');
+  return {
+    white, pupil,
+    baseX: parseFloat(pupil.getAttribute('cx')),
+    baseY: parseFloat(pupil.getAttribute('cy')),
+    max:   parseFloat(pupil.dataset.max || 4.5),
+    rect:  null,
+  };
+});
+
+function cacheEyeRects(){
+  eyeParts.forEach(e => { e.rect = e.white.getBoundingClientRect() });
+}
+window.addEventListener('resize', cacheEyeRects);
+window.addEventListener('scroll', cacheEyeRects, { passive:true });
+
+/* เป้าหมายสายตา: ปกติตามเมาส์ แต่ถ้ากำลังพิมพ์ในช่องไหน ให้มองช่องนั้น */
+let target = { x: window.innerWidth/2, y: window.innerHeight/2 };
+let lockedEl = null;
+let rafPending = false;
+
+function setTargetFromEvent(e){
+  if(lockedEl) return;
+  target.x = e.clientX;
+  target.y = e.clientY;
+  requestTrack();
+}
+function lookAtElement(el){
+  lockedEl = el;
+  const r = el.getBoundingClientRect();
+  target.x = r.left + r.width * 0.35;
+  target.y = r.top + r.height / 2;
+  requestTrack();
+}
+function unlockLook(){ lockedEl = null }
+
+function requestTrack(){
+  if(rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => { rafPending = false; trackEyes() });
+}
+
+function trackEyes(){
+  eyeParts.forEach(e => {
+    if(!e.rect) return;
+    const cx = e.rect.left + e.rect.width / 2;
+    const cy = e.rect.top + e.rect.height / 2;
+    const dx = target.x - cx;
+    const dy = target.y - cy;
+    const dist = Math.hypot(dx, dy) || 1;
+    /* ยิ่งเมาส์ไกล ยิ่งกลอกตาสุดขอบ (จำกัดไม่ให้เกินขอบตาขาว) */
+    const strength = Math.min(1, dist / 130);
+    const ox = (dx / dist) * e.max * strength;
+    const oy = (dy / dist) * e.max * strength;
+    e.pupil.setAttribute('cx', (e.baseX + ox).toFixed(2));
+    e.pupil.setAttribute('cy', (e.baseY + oy).toFixed(2));
+  });
+}
+
+document.addEventListener('mousemove', setTargetFromEvent);
+document.addEventListener('touchmove', ev => {
+  if(ev.touches[0]) setTargetFromEvent(ev.touches[0]);
+}, { passive:true });
+document.addEventListener('mouseleave', () => {
+  if(lockedEl) return;
+  target.x = window.innerWidth / 2;
+  target.y = window.innerHeight / 2;
+  requestTrack();
+});
+
+/* ปิดตาตอนกรอกรหัสผ่าน */
+function setShy(on){
+  mascotEls.forEach(m => m.classList.toggle('shy', on));
+}
+
+/* โบกมือพร้อมกันทั้ง 3 ตัว */
+function waveAll(){
+  mascotEls.forEach(m => {
+    m.classList.remove('waving');
+    void m.offsetWidth;      /* บังคับ reflow ให้เล่นซ้ำได้ */
+    m.classList.add('waving');
+  });
+  setTimeout(() => mascotEls.forEach(m => m.classList.remove('waving')), 2400);
+}
+
+/* ============================================================
+   3) บับเบิลคำพูด
+   ============================================================ */
+const bubbleEl = document.getElementById('bubble');
+let idleTimer = null;
+const IDLE_LINES = [
+  'สวัสดีครับ! พวกเรารอคุณอยู่เลย 🙏',
+  'น้องกัปตัน น้องกัน น้องกิต ให้บริการครับ 🌿',
+  'ล็อกอินแล้วมาคุยกันต่อที่หน้าแชทนะครับ 💬',
+  'ที่พักริมทะเลน้อยกำลังบัวแดงบานเลยครับ 🌺',
+  'ยังไม่มีบัญชี? กดแท็บ "สมัครสมาชิก" ได้เลยครับ ✨',
+];
+let idleIdx = 0;
+
+function say(text, mood){
+  bubbleEl.textContent = text;
+  bubbleEl.className = 'bubble pop' + (mood ? ' ' + mood : '');
+  setTimeout(() => bubbleEl.classList.remove('pop'), 420);
+}
+function startIdleTalk(){
+  clearInterval(idleTimer);
+  idleTimer = setInterval(() => {
+    if(document.activeElement && document.activeElement.tagName === 'INPUT') return;
+    idleIdx = (idleIdx + 1) % IDLE_LINES.length;
+    say(IDLE_LINES[idleIdx]);
+  }, 5200);
+}
+function pauseIdleTalk(){ clearInterval(idleTimer) }
+
+/* ============================================================
+   4) ฟอร์ม — แท็บ / โชว์รหัสผ่าน / ข้อความแจ้งเตือน
+   ============================================================ */
+function switchTab(mode){
+  const isReg = mode === 'register';
+  document.getElementById('tabs').classList.toggle('reg', isReg);
+  document.getElementById('tab-login').classList.toggle('active', !isReg);
+  document.getElementById('tab-reg').classList.toggle('active', isReg);
+  document.getElementById('pane-login').classList.toggle('active', !isReg);
+  document.getElementById('pane-register').classList.toggle('active', isReg);
+  hideMsg('li-msg'); hideMsg('rg-msg');
+  say(isReg ? 'สมัครสมาชิกเลยครับ! คนแรกของระบบจะได้เป็นแอดมินนะ 😉'
+            : 'ยินดีต้อนรับกลับมาครับ 🌿');
+}
+
+function togglePass(id, btn){
+  const inp = document.getElementById(id);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁️';
+  setShy(!show && document.activeElement === inp);
+  say(show ? 'แอบดูรหัสผ่านได้แล้วครับ 👀' : 'ปิดตาให้เหมือนเดิมครับ 🙈');
+}
+
+function showMsg(id, text, ok){
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'form-msg ' + (ok ? 'ok' : 'err');
+}
+function hideMsg(id){ document.getElementById(id).className = 'form-msg' }
+
+/* ผูกพฤติกรรมสายตากับช่องกรอกทุกช่อง */
+['li-user','li-pass','rg-user','rg-pass','rg-pass2'].forEach(id => {
+  const el = document.getElementById(id);
+  const isPass = id.includes('pass');
+
+  el.addEventListener('focus', () => {
+    pauseIdleTalk();
+    if(isPass && el.type === 'password'){
+      setShy(true);
+      say('ปิดตาแล้วครับ ไม่แอบดูรหัสผ่านแน่นอน 🙈', 'good');
+    }else{
+      setShy(false);
+      lookAtElement(el);
+      say(id === 'rg-user' ? 'อยากให้เรียกว่าอะไรดีครับ? ✨'
+                           : 'พิมพ์ได้เลยครับ พวกเรามองตามอยู่ 👀');
+    }
+  });
+
+  el.addEventListener('input', () => {
+    if(!isPass || el.type === 'text') lookAtElement(el);
+  });
+
+  el.addEventListener('blur', () => {
+    setShy(false);
+    unlockLook();
+    startIdleTalk();
+  });
+
+  el.addEventListener('keydown', ev => {
+    if(ev.key === 'Enter'){
+      ev.preventDefault();
+      if(id.startsWith('li')) doLogin(); else doRegister();
+    }
+  });
+});
+
+/* ============================================================
+   5) เข้าสู่ระบบ / สมัครสมาชิก
+   ============================================================ */
+function setSession(u){ localStorage.setItem('session', JSON.stringify(u)) }
+
+/* โบกมือ → บับเบิลอวยพร → ม่านปิด → ไปหน้าแชท */
+function goToChat(username, isNew){
+  waveAll();
+  say(`${isNew ? 'สมัครสำเร็จ' : 'ยินดีต้อนรับ'}ครับคุณ ${username}! 👋 พวกเราโบกมือให้เลย`, 'good');
+  const btns = document.querySelectorAll('.btn');
+  btns.forEach(b => b.disabled = true);
+
+  setTimeout(() => {
+    document.getElementById('curtain-text').textContent =
+      `กำลังพาคุณ ${username} ไปหน้าแชท...`;
+    document.getElementById('curtain').classList.add('show');
+    document.body.classList.add('leaving');
+  }, 1500);
+
+  setTimeout(() => {
+    try{ sessionStorage.setItem('justLoggedIn', '1') }catch(e){}
+    window.location.href = 'index.html?from=login';
+  }, 2200);
+}
+
+function doLogin(){
+  const user = document.getElementById('li-user').value.trim();
+  const pass = document.getElementById('li-pass').value;
+
+  if(!dbReady){ showMsg('li-msg','กำลังเชื่อมต่อฐานข้อมูล รอสักครู่นะครับ'); say('รอแป๊บนึงนะครับ กำลังต่อฐานข้อมูล ⏳'); return }
+  if(!user || !pass){
+    showMsg('li-msg','กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+    say('กรอกให้ครบก่อนนะครับ 😊', 'warn'); return;
+  }
+  const found = usersCache.find(u => u && u.username === user && u.password === pass);
+  if(!found){
+    showMsg('li-msg','ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+    say('อุ๊ย ไม่ตรงนะครับ ลองใหม่อีกครั้ง 🤔', 'warn');
+    return;
+  }
+  showMsg('li-msg','เข้าสู่ระบบสำเร็จ ✅', true);
+  setSession({ username: found.username, role: found.role });
+  goToChat(found.username, false);
+}
+
+function doRegister(){
+  const user  = document.getElementById('rg-user').value.trim();
+  const pass  = document.getElementById('rg-pass').value;
+  const pass2 = document.getElementById('rg-pass2').value;
+
+  if(!dbReady){ showMsg('rg-msg','กำลังเชื่อมต่อฐานข้อมูล รอสักครู่นะครับ'); say('รอแป๊บนึงนะครับ กำลังต่อฐานข้อมูล ⏳'); return }
+  if(!user || !pass){
+    showMsg('rg-msg','กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบถ้วน');
+    say('กรอกให้ครบก่อนนะครับ 😊', 'warn'); return;
+  }
+  if(pass.length < 4){
+    showMsg('rg-msg','รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร');
+    say('รหัสผ่านสั้นไปนิดนึงครับ 🔐', 'warn'); return;
+  }
+  if(pass !== pass2){
+    showMsg('rg-msg','รหัสผ่านทั้งสองช่องไม่ตรงกัน');
+    say('รหัสผ่านสองช่องไม่ตรงกันนะครับ 🙈', 'warn'); return;
+  }
+  if(usersCache.some(u => u && u.username.toLowerCase() === user.toLowerCase())){
+    showMsg('rg-msg','ชื่อผู้ใช้นี้ถูกใช้งานแล้ว กรุณาเลือกชื่ออื่น');
+    say('ชื่อนี้มีคนใช้แล้วครับ ลองชื่ออื่นดู ✨', 'warn'); return;
+  }
+
+  /* กฎเดิม: ถ้ายังไม่มีใครในระบบ คนแรกได้สิทธิ์ admin อัตโนมัติ */
+  const role = usersCache.length === 0 ? 'admin' : 'user';
+  const list = [...usersCache, { username: user, password: pass, role }];
+  saveUsers(list);
+  showMsg('rg-msg','สมัครสมาชิกสำเร็จ ✅', true);
+  setSession({ username: user, role });
+  goToChat(user, true);
+}
+
+/* ============================================================
+   6) เริ่มระบบ
+   ============================================================ */
+initDB();
+cacheEyeRects();
+setTimeout(cacheEyeRects, 400);   /* เผื่อฟอนต์/เลย์เอาต์ยังไม่นิ่ง */
+window.addEventListener('load', cacheEyeRects);
+trackEyes();
+startIdleTalk();
+
+/* ใบไม้ลอยพื้นหลัง */
+(function makeLeaves(){
+  const icons = ['🍃','🌿','🍀','🌾'];
+  for(let i = 0; i < 9; i++){
+    const s = document.createElement('span');
+    s.className = 'leaf';
+    s.textContent = icons[i % icons.length];
+    s.style.left = (Math.random() * 96) + 'vw';
+    s.style.fontSize = (16 + Math.random() * 20) + 'px';
+    s.style.animationDuration = (16 + Math.random() * 16) + 's';
+    s.style.animationDelay = (-Math.random() * 20) + 's';
+    document.body.appendChild(s);
+  }
+})();
+
+/* ถ้าล็อกอินค้างอยู่แล้ว ถามว่าจะเข้าเลยไหม (ไม่เด้งเองเพื่อให้กด "ออกจากระบบ" ได้) */
+(function alreadyIn(){
+  let s = null;
+  try{ s = JSON.parse(localStorage.getItem('session')) }catch(e){}
+  if(s && s.username){
+    say(`คุณ ${s.username} ล็อกอินค้างอยู่ครับ 👋`, 'good');
+    const card = document.querySelector('.card');
+    const btn = document.createElement('button');
+    btn.className = 'btn ghost';
+    btn.textContent = '➡️ เข้าหน้าแชทต่อเลย (' + s.username + ')';
+    btn.onclick = () => { document.getElementById('curtain').classList.add('show');
+                          document.body.classList.add('leaving');
+                          setTimeout(() => window.location.href = 'index.html?from=login', 500) };
+    const out = document.createElement('button');
+    out.className = 'btn ghost';
+    out.textContent = '🚪 ออกจากระบบ แล้วเข้าบัญชีอื่น';
+    out.onclick = () => { localStorage.removeItem('session'); location.reload() };
+    card.insertBefore(out, card.querySelector('.conn'));
+    card.insertBefore(btn, out);
+  }
+})();
+</script>
+</body>
+</html>
