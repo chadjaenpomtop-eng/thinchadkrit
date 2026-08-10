@@ -85,6 +85,34 @@ h1,h2,h3,h4,.font-display{font-family:'Prompt',sans-serif}
 .btn.danger:hover{background:#a94435}
 .btn.small{padding:6px 12px;font-size:13px;border-radius:10px}
 .btn.amber{background:var(--amber)}
+/* ปุ่มเมื่อจองที่นี่อยู่แล้ว */
+.btn.booked{background:var(--amber);color:#3d2a08;font-weight:600}
+.btn.booked:hover{background:#cf8a25;color:#fff}
+
+/* ---------- รูปโปรไฟล์ ---------- */
+.avatar{
+  border-radius:50%;object-fit:cover;flex-shrink:0;
+  background:var(--green-100);border:2px solid rgba(255,255,255,.6);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Prompt',sans-serif;font-weight:600;color:var(--green-900);
+}
+.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.user-box .ub-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.user-box .avatar{width:40px;height:40px;font-size:17px}
+.msg.user .who .avatar{width:18px;height:18px;font-size:9px;display:inline-flex;vertical-align:middle;margin-right:4px;border-width:1px}
+.mobile-topbar .avatar{width:32px;height:32px;font-size:14px}
+
+.profile-head{display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.profile-head .avatar{width:76px;height:76px;font-size:30px;border-color:var(--line)}
+.profile-head .ph-actions{display:flex;flex-direction:column;gap:7px;flex:1}
+.emoji-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.emoji-picker button{
+  width:38px;height:38px;font-size:19px;border:1.5px solid var(--line);border-radius:11px;
+  background:#fff;cursor:pointer;transition:transform .15s, border-color .15s;
+}
+.emoji-picker button:hover{transform:translateY(-2px);border-color:var(--green-500)}
+.emoji-picker button.on{border-color:var(--green-500);background:var(--green-100)}
+.hint{font-size:12px;color:var(--ink-soft);line-height:1.6}
 .btn.amber:hover{background:#cf8a25}
 
 /* ---------- Layout 3 คอลัมน์ ---------- */
@@ -360,6 +388,47 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
 .add-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
 .empty-row{text-align:center;color:var(--ink-soft);padding:18px !important}
 
+/* ========== แถบบน/แถบล่าง เฉพาะมือถือ ========== */
+.mobile-topbar, .mobile-tabs, .drawer-backdrop{display:none}
+
+.mobile-topbar{
+  position:fixed;top:0;left:0;right:0;height:56px;z-index:65;
+  background:linear-gradient(120deg,var(--green-900),var(--green-700));
+  align-items:center;gap:10px;padding:0 12px;box-shadow:0 2px 10px rgba(30,77,54,.25);
+}
+.mobile-topbar .mt-logo{width:62px;height:30px;flex-shrink:0}
+.mobile-topbar .mt-logo svg{width:100%;height:100%;overflow:visible}
+.mobile-topbar h1{font-size:15px;color:#fff;line-height:1.2;flex:1;min-width:0}
+.mobile-topbar h1 small{display:block;font-size:10.5px;color:#bfe3cd;font-weight:400}
+.icon-btn{
+  width:42px;height:42px;flex-shrink:0;border:none;border-radius:12px;cursor:pointer;
+  background:rgba(255,255,255,.14);color:#eaf6ee;font-size:19px;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.icon-btn:active{background:rgba(255,255,255,.3)}
+
+.mobile-tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:65;height:60px;
+  background:var(--bg-panel);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.mobile-tabs button{
+  flex:1;background:none;border:none;cursor:pointer;
+  font-family:'Prompt',sans-serif;font-size:11.5px;color:var(--ink-soft);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  -webkit-tap-highlight-color:transparent;
+}
+.mobile-tabs button .ic{font-size:20px;line-height:1}
+.mobile-tabs button.active{color:var(--green-700);font-weight:600}
+.mobile-tabs button.active .ic{transform:translateY(-2px);transition:transform .2s}
+
+.drawer-backdrop{
+  position:fixed;inset:0;background:rgba(20,40,30,.5);z-index:68;
+  opacity:0;transition:opacity .3s;
+}
+body.drawer-open .drawer-backdrop{display:block;opacity:1}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width:1150px){
   .app{grid-template-columns:220px minmax(0,1fr);grid-template-rows:auto auto;height:auto;min-height:100vh}
@@ -367,11 +436,79 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
   .map-box,.detail-box{flex:1}
   .chat-panel{height:72vh}
 }
+/* ============ มือถือ: แถบบน + แท็บล่าง + เมนูสไลด์ ============ */
 @media (max-width:760px){
-  .app{grid-template-columns:1fr;padding:12px;gap:12px}
-  .sidebar{flex-direction:column}
-  .right-panel{flex-direction:column}
-  .msg{max-width:92%}
+  body{overflow:hidden}
+  .mobile-topbar{display:flex}
+  .mobile-tabs{display:flex}
+
+  .app{
+    grid-template-columns:1fr;grid-template-rows:1fr;
+    height:100dvh;padding:56px 0 60px;gap:0;max-width:100%;
+  }
+
+  /* แถบซ้ายกลายเป็นเมนูสไลด์จากขอบจอ */
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;width:84%;max-width:310px;z-index:70;
+    border-radius:0 20px 20px 0;overflow-y:auto;
+    transform:translateX(-105%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+    padding-top:calc(18px + env(safe-area-inset-top));
+  }
+  body.drawer-open .sidebar{transform:none}
+  .sidebar .nav button{padding:13px 14px;font-size:15px}
+  .welcome-card{margin-bottom:18px}
+
+  /* สลับมุมมองด้วยแท็บล่าง */
+  .chat-panel, .right-panel{border-radius:0;height:100%;min-height:0}
+  .chat-panel{border-left:0;border-right:0}
+  body.view-chat .right-panel{display:none}
+  body.view-map  .chat-panel{display:none}
+  .right-panel{gap:0;overflow:hidden}
+  .map-box{border-radius:0;border-left:0;border-right:0;border-top:0}
+  .map-container{height:42dvh}
+  .detail-box{border-radius:0;border-left:0;border-right:0}
+
+  .chat-head{padding:10px 14px}
+  .chat-head h2{font-size:14.5px}
+  .chat-body{padding:14px}
+  .msg{max-width:90%}
+  .msg .bubble{font-size:15px}
+
+  /* กันมือถือ iOS ซูมอัตโนมัติตอนโฟกัสช่องกรอก (ต้อง >= 16px) */
+  .chat-input input, .field input, .field select{font-size:16px}
+  .chat-input{padding:10px 12px;gap:8px}
+  .chat-input .btn{padding:11px 16px}
+  .quick-row{padding:8px 12px 0;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .quick-row::-webkit-scrollbar{display:none}
+  .chip{white-space:nowrap;padding:7px 14px;font-size:13px}
+
+  .place-card{min-width:200px;max-width:200px}
+  .place-card .btn{padding:9px 14px}
+
+  /* Modal เต็มจอแบบ bottom sheet */
+  .overlay{align-items:flex-end;padding:0}
+  .modal{
+    max-width:100%;border-radius:20px 20px 0 0;max-height:90dvh;
+    padding:20px 18px calc(20px + env(safe-area-inset-bottom));
+    animation:sheetUp .3s cubic-bezier(.32,.72,0,1);
+  }
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+  .admin-modal{max-width:100%}
+  /* ตารางหลังบ้านเลื่อนแนวนอนได้ ไม่ล้นจอ */
+  .admin-section{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .admin-section table{min-width:560px}
+  .admin-tabs{overflow-x:auto;flex-wrap:nowrap}
+  .admin-tabs button{white-space:nowrap}
+  .add-grid{grid-template-columns:1fr}
+  .modal .actions .btn{padding:12px}
+
+  .sound-pill{bottom:calc(72px + env(safe-area-inset-bottom));right:12px;left:12px;font-size:13.5px}
+}
+
+/* จอเล็กมาก */
+@media (max-width:380px){
+  .mobile-topbar h1{font-size:14px}
+  .place-card{min-width:180px;max-width:180px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -381,6 +518,59 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
 <body>
 
 <button class="sound-pill" id="sound-pill" onclick="playWelcomeNow()">🔊 กดเพื่อฟังเสียงต้อนรับ</button>
+
+<!-- ================= แถบบน (เฉพาะมือถือ) ================= -->
+<header class="mobile-topbar">
+  <button class="icon-btn" onclick="toggleDrawer()" aria-label="เปิดเมนู">☰</button>
+  <div class="mt-logo">
+    <svg viewBox="0 0 132 60" xmlns="http://www.w3.org/2000/svg">
+      <g class="trio-head h1">
+        <circle cx="24" cy="34" r="20" fill="#3a9d6e"/>
+        <path d="M24 12 C21 3, 32 2, 33 9 C34 15, 26 16, 24 12Z" fill="#2e7d54"/>
+        <g class="eye"><circle class="white" cx="17" cy="32" r="6.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="17" cy="32" r="3" fill="#22352b" data-max="2.6"/></g>
+        <g class="eye"><circle class="white" cx="31" cy="32" r="6.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="31" cy="32" r="3" fill="#22352b" data-max="2.6"/></g>
+        <path d="M19 43 Q24 47 29 43" stroke="#1e4d36" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="trio-head h2">
+        <circle cx="66" cy="31" r="23" fill="#2e7d54"/>
+        <path d="M43 17 Q66 1 89 17 L89 20 Q66 10 43 20 Z" fill="#1e4d36"/>
+        <rect x="41" y="17" width="50" height="6" rx="3" fill="#123526"/>
+        <circle cx="66" cy="9" r="3" fill="#e8a13d"/>
+        <g class="eye"><circle class="white" cx="58" cy="31" r="7.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="58" cy="31" r="3.5" fill="#22352b" data-max="3"/></g>
+        <g class="eye"><circle class="white" cx="74" cy="31" r="7.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="74" cy="31" r="3.5" fill="#22352b" data-max="3"/></g>
+        <path d="M60 43 Q66 48 72 43" stroke="#123526" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      </g>
+      <g class="trio-head h3">
+        <circle cx="108" cy="34" r="20" fill="#e8a13d"/>
+        <rect x="106.5" y="8" width="3" height="8" rx="1.5" fill="#c9832a"/>
+        <circle cx="108" cy="7" r="4" fill="#3a9d6e"/>
+        <g class="eye"><circle class="white" cx="101" cy="32" r="6.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="101" cy="32" r="3" fill="#22352b" data-max="2.6"/></g>
+        <g class="eye"><circle class="white" cx="115" cy="32" r="6.5" fill="#fdfffd"/>
+          <circle class="pupil" cx="115" cy="32" r="3" fill="#22352b" data-max="2.6"/></g>
+        <path d="M103 43 Q108 47 113 43" stroke="#8a5d16" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+  <h1>แชทจองที่พัก<small id="mt-user">พัทลุง</small></h1>
+</header>
+
+<!-- ฉากหลังตอนเปิดเมนู -->
+<div class="drawer-backdrop" onclick="toggleDrawer(false)"></div>
+
+<!-- ================= แท็บล่าง (เฉพาะมือถือ) ================= -->
+<nav class="mobile-tabs">
+  <button id="tab-chat" class="active" onclick="setMobileView('chat')">
+    <span class="ic">💬</span>แชท
+  </button>
+  <button id="tab-map" onclick="setMobileView('map')">
+    <span class="ic">🗺️</span>แผนที่ / รายละเอียด
+  </button>
+</nav>
 
 <div class="app">
 
@@ -438,10 +628,10 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
     </div>
 
     <nav class="nav">
-      <button class="active" onclick="goHome()">🏠 หน้าหลัก</button>
-      <button onclick="openProfile()">👤 โปรไฟล์</button>
-      <button id="btn-admin" onclick="openAdmin()">🛠️ ระบบหลังบ้าน</button>
-      <button id="btn-sound" onclick="toggleSound()">🔊 เสียง: เปิด</button>
+      <button class="active" onclick="closeDrawer();goHome()">🏠 หน้าหลัก</button>
+      <button onclick="closeDrawer();openProfile()">👤 โปรไฟล์</button>
+      <button id="btn-admin" onclick="closeDrawer();openAdmin()">🛠️ ระบบหลังบ้าน</button>
+      <button id="btn-sound" onclick="closeDrawer();toggleSound()">🔊 เสียง: เปิด</button>
     </nav>
 
     <div class="welcome-card">
@@ -583,10 +773,33 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
   <div class="modal">
     <h3>👤 โปรไฟล์ของฉัน</h3>
     <div class="sub" id="pf-sub"></div>
-    <div id="pf-body"></div>
+
+    <!-- รูปโปรไฟล์ -->
+    <div class="profile-head">
+      <div class="avatar" id="pf-avatar"></div>
+      <div class="ph-actions">
+        <button class="btn small" onclick="document.getElementById('pf-file').click()">📷 อัปโหลดรูป</button>
+        <button class="btn ghost small" onclick="clearAvatar()">🗑️ ลบรูป</button>
+        <input type="file" id="pf-file" accept="image/*" style="display:none" onchange="onPickAvatar(event)">
+      </div>
+    </div>
+    <div class="hint">หรือเลือกรูปตัวแทนแบบเร็ว:</div>
+    <div class="emoji-picker" id="pf-emojis"></div>
+
+    <!-- ชื่อที่แสดง -->
+    <div class="field" style="margin-top:14px">
+      <label>ชื่อที่แสดง (เปลี่ยนได้อิสระ)</label>
+      <input id="pf-name" placeholder="เช่น ช่อแก้ว เมืองลุง" maxlength="30">
+    </div>
+    <div class="hint" id="pf-login-hint"></div>
+    <div class="form-msg" id="pf-msg"></div>
+
     <div class="actions">
       <button class="btn ghost" onclick="closeOverlay('profile-overlay')">ปิด</button>
+      <button class="btn" onclick="saveProfile()">💾 บันทึกโปรไฟล์</button>
     </div>
+
+    <div id="pf-body" style="margin-top:18px"></div>
   </div>
 </div>
 
@@ -708,6 +921,8 @@ function setConnStatus(text){
 }
 
 function onDataChanged(key){
+  if(key === 'bookings' && typeof refreshBookingButtons === 'function') refreshBookingButtons();
+  if(key === 'users' && typeof renderUserBox === 'function') renderUserBox();
   const adminOverlay = document.getElementById('admin-overlay');
   if(adminOverlay && adminOverlay.classList.contains('open')){
     if(key === 'places')   renderAdminPlaces();
@@ -810,8 +1025,15 @@ function renderUserBox(){
   const u = currentUser();
   const adminBtn = document.getElementById('btn-admin');
   if(u){
+    const p = myProfile();
     box.innerHTML = `
-      <div class="uname">👋 สวัสดี, ${esc(u.username)}</div>
+      <div class="ub-row">
+        <div class="avatar">${avatarHtml(p)}</div>
+        <div style="min-width:0">
+          <div class="uname">${esc(p.displayName)}</div>
+          <div class="urole" style="margin:0">@${esc(p.username)}</div>
+        </div>
+      </div>
       <div class="urole">สิทธิ์: ${u.role === 'admin' ? 'ผู้ดูแลระบบ' : 'สมาชิกทั่วไป'}</div>
       <button class="btn ghost" style="color:#eaf6ee;border-color:rgba(255,255,255,.5)" onclick="doLogout()">🚪 ออกจากระบบ</button>`;
     adminBtn.style.display = (u.role === 'admin') ? 'flex' : 'none';
@@ -821,6 +1043,7 @@ function renderUserBox(){
       <button class="btn" style="width:100%" onclick="goLoginPage()">เข้าสู่ระบบ / สมัครสมาชิก</button>`;
     adminBtn.style.display = 'none';
   }
+  renderMobileUser();
 }
 
 /* ---------- ระบบล็อกอินย้ายไปหน้า login.html แล้ว ----------
@@ -885,6 +1108,166 @@ function doLogout(){
 }
 
 /* ============================================================
+   PROFILE — รูปโปรไฟล์ + ชื่อที่แสดง
+   ============================================================ */
+const AVATAR_EMOJIS = ['🧑','👩','👨','🧕','👳','🐘','🐃','🌿','🌺','⛰️','🚤','🍖'];
+
+/* อ่านโปรไฟล์เต็มของผู้ใช้ปัจจุบัน (ชื่อที่แสดง/รูป เก็บใน users) */
+function myProfile(){
+  const s = currentUser();
+  if(!s) return null;
+  const rec = DB.get('users').find(u => u && u.username === s.username) || {};
+  return {
+    username:    s.username,
+    role:        s.role,
+    displayName: rec.displayName || s.username,
+    avatar:      rec.avatar || '',
+  };
+}
+
+/* สร้าง HTML รูปโปรไฟล์: รูปจริง / อีโมจิ / ตัวอักษรแรก */
+function avatarHtml(p){
+  if(!p) return '';
+  const a = p.avatar || '';
+  if(a.startsWith('data:') || a.startsWith('http')){
+    return `<img src="${esc(a)}" alt="รูปโปรไฟล์">`;
+  }
+  if(a) return esc(a);                               /* อีโมจิ */
+  return esc((p.displayName || p.username || '?').charAt(0).toUpperCase());
+}
+
+/* ย่อรูปที่อัปโหลดให้เล็กก่อนเก็บ (กันฐานข้อมูลบวม) */
+function onPickAvatar(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ showMsg('pf-msg','กรุณาเลือกไฟล์รูปภาพ'); return }
+  if(file.size > 8 * 1024 * 1024){ showMsg('pf-msg','ไฟล์ใหญ่เกินไป (จำกัด 8 MB)'); return }
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const SIZE = 160;                       /* ย่อเป็นสี่เหลี่ยมจัตุรัส 160px */
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = SIZE;
+      const ctx = cv.getContext('2d');
+      const side = Math.min(img.width, img.height);
+      ctx.drawImage(img, (img.width - side)/2, (img.height - side)/2, side, side, 0, 0, SIZE, SIZE);
+      pendingAvatar = cv.toDataURL('image/jpeg', 0.82);
+      document.getElementById('pf-avatar').innerHTML = `<img src="${pendingAvatar}" alt="ตัวอย่างรูป">`;
+      markEmoji('');
+      showMsg('pf-msg','เลือกรูปแล้ว อย่าลืมกด "บันทึกโปรไฟล์" ครับ', true);
+    };
+    img.onerror = () => showMsg('pf-msg','เปิดไฟล์รูปไม่สำเร็จ ลองไฟล์อื่นดูครับ');
+    img.src = e.target.result;
+  };
+  reader.onerror = () => showMsg('pf-msg','อ่านไฟล์ไม่สำเร็จ');
+  reader.readAsDataURL(file);
+  ev.target.value = '';
+}
+
+let pendingAvatar = null;   /* รูป/อีโมจิที่เลือกไว้ แต่ยังไม่กดบันทึก */
+
+function pickEmoji(em){
+  pendingAvatar = em;
+  document.getElementById('pf-avatar').innerHTML = esc(em);
+  markEmoji(em);
+  showMsg('pf-msg','เลือกรูปตัวแทนแล้ว กด "บันทึกโปรไฟล์" เพื่อยืนยันครับ', true);
+}
+function markEmoji(em){
+  document.querySelectorAll('#pf-emojis button').forEach(b =>
+    b.classList.toggle('on', b.dataset.em === em));
+}
+function clearAvatar(){
+  pendingAvatar = '';
+  const p = myProfile();
+  document.getElementById('pf-avatar').innerHTML =
+    esc((document.getElementById('pf-name').value || p.username || '?').charAt(0).toUpperCase());
+  markEmoji('');
+  showMsg('pf-msg','ลบรูปแล้ว กด "บันทึกโปรไฟล์" เพื่อยืนยันครับ', true);
+}
+
+function saveProfile(){
+  const s = currentUser();
+  if(!s){ goLoginPage(); return }
+  const name = document.getElementById('pf-name').value.trim();
+  if(!name){ showMsg('pf-msg','กรุณากรอกชื่อที่แสดง'); return }
+  if(name.length > 30){ showMsg('pf-msg','ชื่อยาวเกินไป (ไม่เกิน 30 ตัวอักษร)'); return }
+
+  const users = DB.get('users');
+  const rec = users.find(u => u && u.username === s.username);
+  if(!rec){ showMsg('pf-msg','ไม่พบบัญชีในระบบ ลองเข้าสู่ระบบใหม่ครับ'); return }
+
+  rec.displayName = name;
+  if(pendingAvatar !== null) rec.avatar = pendingAvatar;
+  DB.set('users', users);
+  pendingAvatar = null;
+
+  renderUserBox();
+  showMsg('pf-msg','บันทึกโปรไฟล์เรียบร้อยแล้ว ✅', true);
+  cheerLogo();
+  botSay(`อัปเดตโปรไฟล์เรียบร้อยครับ ตอนนี้พวกเราจะเรียกคุณว่า "${name}" นะครับ 😊`);
+}
+
+/* ============================================================
+   BOOKING STATUS — ที่พักที่กำลังจองอยู่
+   ============================================================ */
+function todayStr(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+/* คืนรายการจองที่ยัง "กำลังจอง" อยู่ของผู้ใช้ปัจจุบันสำหรับที่พักนี้ */
+function activeBooking(placeId){
+  const s = currentUser();
+  if(!s) return null;
+  const t = todayStr();
+  return DB.get('bookings').find(b =>
+    b && b.username === s.username && Number(b.placeId) === Number(placeId) && b.checkout >= t) || null;
+}
+
+/* ปรับข้อความ/สีปุ่มตามสถานะ */
+function paintBookBtn(btn, placeId){
+  if(!btn) return;
+  const b = activeBooking(placeId);
+  if(b){
+    btn.textContent = '⏳ กำลังจอง';
+    btn.classList.add('booked');
+    btn.title = `จองแล้ว: ${b.checkin} ถึง ${b.checkout}`;
+  }else{
+    btn.textContent = btn.dataset.full === '1' ? '📅 จองที่พักนี้' : '📅 จองเลย';
+    btn.classList.remove('booked');
+    btn.title = '';
+  }
+}
+
+/* อัปเดตปุ่มทุกใบในแชท (รวมการ์ดที่แนะนำซ้ำ) + ปุ่มฝั่งขวา */
+function refreshBookingButtons(){
+  document.querySelectorAll('.place-card[data-place-id]').forEach(card => {
+    paintBookBtn(card.querySelector('.book-btn'), card.dataset.placeId);
+  });
+  if(selectedPlaceId != null) paintBookBtn(document.getElementById('d-book'), selectedPlaceId);
+}
+
+/* กดปุ่มจอง: ถ้าจองอยู่แล้วให้ถามว่าจะยกเลิกไหม */
+function handleBookClick(placeId){
+  const b = activeBooking(placeId);
+  if(b){
+    const ok = confirm(
+      `คุณจอง "${b.placeName}" ไว้อยู่แล้วครับ\n` +
+      `เช็คอิน ${b.checkin} ถึง ${b.checkout} (${b.guests} คน)\n\n` +
+      `ต้องการยกเลิกการจองนี้ไหม?`);
+    if(ok){
+      DB.set('bookings', DB.get('bookings').filter(x => x.id !== b.id));
+      refreshBookingButtons();
+      botSay(`ยกเลิกการจอง "${b.placeName}" เรียบร้อยแล้วครับ ✅ ถ้าอยากจองใหม่กดปุ่มจองได้เลยครับ`);
+    }
+    return;
+  }
+  openBooking(placeId);
+}
+
+/* ============================================================
    NAV
    ============================================================ */
 function goHome(){
@@ -895,18 +1278,47 @@ function openProfile(){
   const u = currentUser();
   const sub  = document.getElementById('pf-sub');
   const body = document.getElementById('pf-body');
+
   if(!u){
     sub.textContent = 'คุณยังไม่ได้เข้าสู่ระบบ';
     body.innerHTML = `<button class="btn" style="width:100%" onclick="goLoginPage()">เข้าสู่ระบบ / สมัครสมาชิก</button>`;
-  }else{
-    sub.textContent = `บัญชี: ${u.username} • สิทธิ์: ${u.role}`;
-    const my = DB.get('bookings').filter(b => b.username === u.username);
-    body.innerHTML = my.length === 0
-      ? `<p style="font-size:13.5px;color:var(--ink-soft)">ยังไม่มีประวัติการจอง ลองคุยกับน้องกัปตันเพื่อหาที่พักถูกใจดูครับ 🌿</p>`
-      : `<table><thead><tr><th>ที่พัก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>คน</th></tr></thead><tbody>` +
-        my.map(b => `<tr><td>${esc(b.placeName)}</td><td>${esc(b.checkin)}</td><td>${esc(b.checkout)}</td><td>${esc(String(b.guests))}</td></tr>`).join('') +
-        `</tbody></table>`;
+    document.getElementById('profile-overlay').classList.add('open');
+    return;
   }
+
+  const p = myProfile();
+  pendingAvatar = null;
+  hideMsg('pf-msg');
+
+  sub.textContent = `สิทธิ์: ${u.role === 'admin' ? 'ผู้ดูแลระบบ' : 'สมาชิกทั่วไป'}`;
+  document.getElementById('pf-avatar').innerHTML = avatarHtml(p);
+  document.getElementById('pf-name').value = p.displayName;
+  document.getElementById('pf-login-hint').textContent =
+    `ชื่อสำหรับเข้าสู่ระบบคือ "${p.username}" (ใช้ล็อกอิน เปลี่ยนไม่ได้) ส่วนชื่อที่แสดงด้านบนเปลี่ยนได้อิสระ`;
+
+  /* ปุ่มอีโมจิให้เลือกเร็วๆ */
+  const box = document.getElementById('pf-emojis');
+  box.innerHTML = AVATAR_EMOJIS
+    .map(em => `<button data-em="${em}" onclick="pickEmoji('${em}')">${em}</button>`).join('');
+  markEmoji(p.avatar && !p.avatar.startsWith('data:') && !p.avatar.startsWith('http') ? p.avatar : '');
+
+  /* ประวัติการจอง + สถานะ */
+  const t = todayStr();
+  const my = DB.get('bookings').filter(b => b.username === u.username);
+  body.innerHTML = my.length === 0
+    ? `<p style="font-size:13.5px;color:var(--ink-soft)">ยังไม่มีประวัติการจอง ลองคุยกับน้องกัปตันเพื่อหาที่พักถูกใจดูครับ 🌿</p>`
+    : `<h4 class="font-display" style="font-size:14px;color:var(--green-900);margin-bottom:8px">📋 การจองของฉัน</h4>
+       <table><thead><tr><th>ที่พัก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>สถานะ</th></tr></thead><tbody>` +
+      my.map(b => `<tr>
+          <td>${esc(b.placeName)}</td>
+          <td>${esc(b.checkin)}</td>
+          <td>${esc(b.checkout)}</td>
+          <td>${b.checkout >= t
+                ? '<span class="role-pill admin">⏳ กำลังจอง</span>'
+                : '<span class="role-pill user">✔ เข้าพักแล้ว</span>'}</td>
+        </tr>`).join('') +
+      `</tbody></table>`;
+
   document.getElementById('profile-overlay').classList.add('open');
 }
 function closeOverlay(id){ document.getElementById(id).classList.remove('open') }
@@ -932,10 +1344,13 @@ function botSay(text){
   if(typeof animateTalk === 'function') animateTalk();   /* ปากขยับเวลาพูด */
 }
 function userSay(text){
-  const u = currentUser();
+  const p = myProfile();
   const div = document.createElement('div');
   div.className = 'msg user';
-  div.innerHTML = `<span class="who">${u ? esc(u.username) : 'คุณ'}</span><div class="bubble">${esc(text)}</div>`;
+  const who = p
+    ? `<span class="avatar">${avatarHtml(p)}</span>${esc(p.displayName)}`
+    : 'คุณ';
+  div.innerHTML = `<span class="who">${who}</span><div class="bubble">${esc(text)}</div>`;
   chatBody.appendChild(div);
   scrollChat();
 }
@@ -950,6 +1365,7 @@ function showCarousel(places){
   places.forEach(p => {
     const card = document.createElement('div');
     card.className = 'place-card';
+    card.dataset.placeId = p.id;
     card.onclick = () => selectPlace(p.id);
     card.innerHTML = `
       <img src="${esc(p.img_url || FALLBACK_IMG)}" alt="${esc(p.name)}"
@@ -958,9 +1374,11 @@ function showCarousel(places){
         <h4>${esc(p.name)}</h4>
         <div class="price">${Number(p.price).toLocaleString()} ฿ <small>/ คืน</small></div>
         <div class="tags">${(p.tags||[]).map((t,i)=>`<span class="tag ${i%2? 'green':''}">${esc(t)}</span>`).join('')}</div>
-        <button class="btn small">📅 จองเลย</button>
+        <button class="btn small book-btn">📅 จองเลย</button>
       </div>`;
-    card.querySelector('.btn').onclick = (e) => { e.stopPropagation(); openBooking(p.id) };
+    const bb = card.querySelector('.book-btn');
+    bb.onclick = (e) => { e.stopPropagation(); handleBookClick(p.id) };
+    paintBookBtn(bb, p.id);          /* แสดง "กำลังจอง" ถ้าจองไว้แล้ว */
     inner.appendChild(card);
   });
   wrap.appendChild(inner);
@@ -1050,6 +1468,7 @@ function botReply(raw){
       const idx = parseInt(nm[1], 10) - 1;
       if(my[idx]){
         DB.set('bookings', DB.get('bookings').filter(b => b.id !== my[idx].id));
+        refreshBookingButtons();
         botSay(`ยกเลิกการจอง "${my[idx].placeName}" (เช็คอิน ${my[idx].checkin}) เรียบร้อยแล้วครับ ✅`);
         return;
       }
@@ -1276,9 +1695,15 @@ function selectPlace(id){
   document.getElementById('d-tags').innerHTML =
     (p.tags||[]).map((t,i)=>`<span class="tag ${i%2? 'green':''}">${esc(t)}</span>`).join('');
   document.getElementById('d-desc').textContent = p.desc || '';
-  document.getElementById('d-book').onclick = () => openBooking(p.id);
+  const dBtn = document.getElementById('d-book');
+  dBtn.dataset.full = '1';
+  dBtn.onclick = () => handleBookClick(p.id);
+  paintBookBtn(dBtn, p.id);
 
   renderMap(p.map_url);
+
+  /* มือถือ: เลือกที่พักแล้วพาไปดูแผนที่+รายละเอียดทันที */
+  if(isMobile()) setMobileView('map');
 }
 
 /* ============================================================
@@ -1331,6 +1756,7 @@ function submitBooking(){
   });
   DB.set('bookings', bookings);
   closeBooking();
+  refreshBookingButtons();      /* การ์ดทุกใบเปลี่ยนเป็น "กำลังจอง" ทันที */
   cheerLogo();
   if(soundEnabled()) playChime();
   botSay(`จองสำเร็จครับ 🎉\nที่พัก: ${p.name}\nผู้เข้าพัก: ${name} (${guests} คน)\nเช็คอิน ${cin} → เช็คเอาท์ ${cout}\nขอบคุณที่ใช้บริการครับ ดูรายการจองได้ที่เมนู "โปรไฟล์" หรือพิมพ์ "ดูการจองของฉัน" ครับ`);
@@ -1494,6 +1920,37 @@ function adminDelBooking(id){
 }
 
 /* ============================================================
+   MOBILE — เมนูสไลด์ / แท็บล่าง
+   ============================================================ */
+function isMobile(){ return window.matchMedia('(max-width:760px)').matches }
+
+function toggleDrawer(force){
+  const open = (force === undefined) ? !document.body.classList.contains('drawer-open') : !!force;
+  document.body.classList.toggle('drawer-open', open);
+}
+function closeDrawer(){ toggleDrawer(false) }
+
+/* สลับมุมมอง: แชท ↔ แผนที่+รายละเอียด */
+function setMobileView(view){
+  document.body.classList.remove('view-chat','view-map');
+  document.body.classList.add('view-' + view);
+  const c = document.getElementById('tab-chat');
+  const m = document.getElementById('tab-map');
+  if(c) c.classList.toggle('active', view === 'chat');
+  if(m) m.classList.toggle('active', view === 'map');
+  if(view === 'chat') setTimeout(scrollChat, 60);
+  if(typeof cacheEyeRects === 'function') setTimeout(cacheEyeRects, 120);
+}
+
+/* แสดงชื่อผู้ใช้บนแถบบนมือถือ */
+function renderMobileUser(){
+  const el = document.getElementById('mt-user');
+  if(!el) return;
+  const p = myProfile();
+  el.textContent = p ? ('สวัสดี, ' + p.displayName) : 'พัทลุง';
+}
+
+/* ============================================================
    MASCOT — ตากลอกตามเมาส์ / ปากขยับตอนบอทพูด
    ============================================================ */
 const eyeParts = [...document.querySelectorAll('.eye')].map(g => {
@@ -1525,12 +1982,20 @@ function trackEyes(){
     e.pupil.setAttribute('cy', (e.baseY + (dy/dist)*e.max*s).toFixed(2));
   });
 }
-document.addEventListener('mousemove', ev => {
-  eyeTarget.x = ev.clientX; eyeTarget.y = ev.clientY;
+function moveEyeTarget(x, y){
+  eyeTarget.x = x; eyeTarget.y = y;
   if(eyeRaf) return;
   eyeRaf = true;
   requestAnimationFrame(() => { eyeRaf = false; trackEyes() });
-});
+}
+document.addEventListener('mousemove', ev => moveEyeTarget(ev.clientX, ev.clientY));
+/* มือถือ: ตามองตามนิ้วที่แตะ/ลาก */
+document.addEventListener('touchstart', ev => {
+  if(ev.touches[0]) moveEyeTarget(ev.touches[0].clientX, ev.touches[0].clientY);
+}, { passive:true });
+document.addEventListener('touchmove', ev => {
+  if(ev.touches[0]) moveEyeTarget(ev.touches[0].clientX, ev.touches[0].clientY);
+}, { passive:true });
 
 /* ปากขยับ + หัวเด้งเวลาบอทพูด */
 function animateTalk(){
@@ -1674,6 +2139,14 @@ renderMap(null);
     ? `ยินดีต้อนรับคุณ ${name} ครับ! 🎉 น้องกัปตัน น้องกัน น้องกิต พร้อมให้บริการแล้ว\nอยากได้ที่พักแบบไหนในพัทลุงบอกได้เลยครับ หรือกดปุ่มลัดด้านล่างเพื่อเริ่มต้นครับ 🌿`
     : `สวัสดีครับคุณ ${name} 🙏 น้องกัปตัน น้องกัน น้องกิต ให้บริการครับ!\nพวกเราคือผู้ช่วย AI จองที่พักจังหวัดพัทลุง อยากได้ที่พักแบบไหนบอกได้เลยครับ หรือกดปุ่มลัดด้านล่างเพื่อเริ่มต้นครับ 🌿`);
 })();
+
+/* เริ่มระบบมือถือ: เปิดที่แท็บแชทก่อน */
+setMobileView('chat');
+window.addEventListener('resize', () => {
+  if(!isMobile()) closeDrawer();
+  cacheEyeRects();
+});
+window.addEventListener('orientationchange', () => setTimeout(cacheEyeRects, 300));
 
 /* เริ่มระบบมาสคอต + เสียง */
 renderSoundBtn();
