@@ -2475,23 +2475,44 @@ function botReply(raw){
    🐣 MASCOT — แอบโผล่ / หลับ / ฉลอง   (ปิดได้ในเมนู)
    ============================================================ */
 const TOON_KEY = 'toon_on';
-function toonEnabled(){
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-  return localStorage.getItem(TOON_KEY) !== '0';
+
+/* เครื่องตั้งค่า "ลดการเคลื่อนไหว" ไว้หรือไม่ */
+function reducedMotion(){
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 }
+/* ค่าที่ผู้ใช้เลือกเอง (แยกจากการตั้งค่าเครื่อง เพื่อให้ปุ่มสลับได้เสมอ) */
+function toonPref(){ return localStorage.getItem(TOON_KEY) !== '0' }
+/* จะเล่นแอนิเมชันจริงไหม = ผู้ใช้เปิด และเครื่องไม่ได้สั่งลดการเคลื่อนไหว */
+function toonEnabled(){ return toonPref() && !reducedMotion() }
+
 function renderToonBtn(){
   const b = document.getElementById('btn-toon');
-  if(b) b.textContent = toonEnabled() ? '🐣 ตัวการ์ตูน: เปิด' : '🐣 ตัวการ์ตูน: ปิด';
+  if(!b) return;
+  b.textContent = toonPref()
+    ? (reducedMotion() ? '🐣 ตัวการ์ตูน: เปิด (เครื่องปิดภาพเคลื่อนไหว)' : '🐣 ตัวการ์ตูน: เปิด')
+    : '🐣 ตัวการ์ตูน: ปิด';
 }
+
 function toggleToon(){
-  localStorage.setItem(TOON_KEY, toonEnabled() ? '0' : '1');
+  const next = !toonPref();                    /* สลับจากค่าที่ผู้ใช้เลือก ไม่ใช่จากผลลัพธ์รวม */
+  localStorage.setItem(TOON_KEY, next ? '1' : '0');
   renderToonBtn();
-  if(!toonEnabled()){
+
+  if(!next){
     const p = document.getElementById('peek');
     if(p) p.classList.remove('up','talk');
     wakeUp();
+    botSay('ปิดตัวการ์ตูนเรียบร้อยครับ หน้าจอจะนิ่งๆ แล้ว 😌');
+    return;
   }
-  botSay(toonEnabled() ? 'เปิดตัวการ์ตูนแล้วครับ 🐣' : 'ปิดตัวการ์ตูนเรียบร้อยครับ หน้าจอจะนิ่งๆ แล้ว 😌');
+
+  schedulePeek();
+  if(reducedMotion()){
+    botSay('เปิดตัวการ์ตูนแล้วครับ 🐣 แต่เครื่องคุณตั้งค่า "ลดการเคลื่อนไหว" ไว้ ระบบจึงยังไม่เล่นแอนิเมชัน\nถ้าอยากให้ขยับ ลองปิดการตั้งค่านั้นในเครื่องดูนะครับ (Windows: การตั้งค่า → การช่วยการเข้าถึง → เอฟเฟ็กต์ภาพ)');
+  }else{
+    botSay('เปิดตัวการ์ตูนแล้วครับ 🐣 เดี๋ยวน้องกิตจะแอบโผล่มาทักเป็นระยะนะครับ');
+    setTimeout(peekOut, 800);
+  }
 }
 
 const PEEK_TIPS = [
