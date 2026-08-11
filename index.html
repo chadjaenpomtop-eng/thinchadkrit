@@ -638,6 +638,14 @@ td img{width:54px;height:38px;object-fit:cover;border-radius:8px;vertical-align:
   padding:14px;margin-bottom:16px;
 }
 .add-form h4{font-size:14px;color:var(--green-900);margin-bottom:10px}
+.add-form.editing{background:#fdf3e2;border-color:#f2ddb6;border-style:solid}
+.add-form.editing h4{color:#8a5d16}
+.img-preview{margin-top:7px}
+.img-preview img{
+  width:100%;max-width:150px;height:74px;object-fit:cover;
+  border-radius:10px;border:1px solid var(--line);display:block;
+}
+.img-preview .ip-none{font-size:11.5px;color:var(--ink-soft)}
 .add-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
 .empty-row{text-align:center;color:var(--ink-soft);padding:18px !important}
 
@@ -1079,18 +1087,25 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
 
     <!-- จัดการสถานที่ -->
     <div class="admin-section active" id="tab-places">
-      <div class="add-form">
-        <h4>➕ เพิ่มสถานที่พักใหม่</h4>
+      <div class="add-form" id="np-form">
+        <h4 id="np-title">➕ เพิ่มสถานที่พักใหม่</h4>
         <div class="add-grid">
           <div class="field"><label>ชื่อที่พัก</label><input id="np-name" placeholder="เช่น บ้านสวนรีสอร์ท"></div>
           <div class="field"><label>ราคา/คืน (บาท)</label><input id="np-price" type="number" placeholder="เช่น 890"></div>
           <div class="field"><label>ป้ายกำกับ (คั่นด้วย , )</label><input id="np-tags" placeholder="ริมน้ำ, ฟรีหมูกระทะ"></div>
-          <div class="field"><label>URL รูปภาพ</label><input id="np-img" placeholder="https://..."></div>
+          <div class="field">
+            <label>URL รูปภาพ</label>
+            <input id="np-img" placeholder="https://..." oninput="previewPlaceImg()">
+            <div class="img-preview" id="np-preview"></div>
+          </div>
           <div class="field"><label>URL แผนที่ (embed)</label><input id="np-map" placeholder="ลิงก์ OpenStreetMap embed หรือพิกัด q=lat,lng"></div>
           <div class="field"><label>คำอธิบาย</label><input id="np-desc" placeholder="บรรยากาศที่พักโดยย่อ"></div>
         </div>
         <div class="form-msg" id="np-msg"></div>
-        <button class="btn small" style="margin-top:6px" onclick="adminAddPlace()">บันทึกสถานที่</button>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
+          <button class="btn small" id="np-save" onclick="adminSavePlace()">💾 บันทึกสถานที่</button>
+          <button class="btn ghost small" id="np-cancel" style="display:none" onclick="cancelEditPlace()">ยกเลิกการแก้ไข</button>
+        </div>
       </div>
       <table>
         <thead><tr><th>รูป</th><th>ชื่อที่พัก</th><th>ราคา</th><th>ป้ายกำกับ</th><th></th></tr></thead>
@@ -1252,48 +1267,112 @@ function onDataChanged(key){
   }
 }
 
-const DATA_VERSION = '3';
+const DATA_VERSION = '4';   /* เปลี่ยนเลข = โหลดที่พักชุดใหม่ 20 แห่ง */
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1542314831-c53cd4b85ca4?w=500&q=80';
 const DEFAULT_MAP = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126435.53036495204!2d100.00755913257774!3d7.615298991207908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x304d7159a4ba2515%3A0x10223bc2c364c90!2z4LiI4Lix4LiH4Lir4Lin4Lix4LiU4Lie4Lix4LiX4Lil4Li44LiH!5e0!3m2!1sth!2sth!4v1700000000000!5m2!1sth!2sth';
 
-const DEFAULT_PLACES = [
-  {
-    id: 1,
-    name: "บ้านริมเล ทะเลน้อย รีสอร์ท",
-    price: 1290,
-    tags: ["ริมน้ำ","ฟรีหมูกระทะ","ล่องเรือชมบัว"],
-    desc: "บ้านพักไม้ยกพื้นริมทะเลน้อย ตื่นเช้ามาชมทะเลบัวแดงบานเต็มผืนน้ำ พร้อมบริการล่องเรือหางยาวและหมูกระทะฟรีทุกห้องพัก",
-    img_url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=500&q=80",
-    map_url: "https://www.openstreetmap.org/export/embed.html?bbox=100.12100%2C7.76900%2C100.16100%2C7.80900&layer=mapnik&marker=7.789%2C100.141"
-  },
-  {
-    id: 2,
-    name: "ภูผาแคมป์ เขาปู่-เขาย่า",
-    price: 690,
-    tags: ["วิวเขา","ทะเลหมอก","แคมป์ปิ้ง"],
-    desc: "ลานกางเต็นท์และบ้านโดมกลางหุบเขาเขตอุทยานเขาปู่-เขาย่า ชมทะเลหมอกยามเช้า อากาศเย็นสบายตลอดปี เหมาะกับสายธรรมชาติ",
-    img_url: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=500&q=80",
-    map_url: "https://www.openstreetmap.org/export/embed.html?bbox=99.76900%2C7.68800%2C99.80900%2C7.72800&layer=mapnik&marker=7.708%2C99.789"
-  },
-  {
-    id: 3,
-    name: "ลำปำ ริเวอร์วิว โฮมสเตย์",
-    price: 750,
-    tags: ["ริมน้ำ","อาหารเช้าฟรี","ใกล้หาดแสนสุข"],
-    desc: "โฮมสเตย์บรรยากาศชุมชนริมคลองลำปำ ใกล้หาดแสนสุขลำปำและวังเจ้าเมืองพัทลุง มีอาหารเช้าพื้นถิ่นเสิร์ฟฟรีทุกวัน",
-    img_url: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&q=80",
-    map_url: "https://www.openstreetmap.org/export/embed.html?bbox=100.13700%2C7.61200%2C100.17700%2C7.65200&layer=mapnik&marker=7.632%2C100.157"
-  },
-  {
-    id: 4,
-    name: "นาโปแก ฟาร์มสเตย์",
-    price: 590,
-    tags: ["กลางทุ่งนา","ฟรีหมูกระทะ","ปั่นจักรยาน"],
-    desc: "ฟาร์มสเตย์กลางทุ่งนาเขียวขจี สัมผัสวิถีชีวิตชาวนาเมืองลุง ปั่นจักรยานชมทุ่ง ตอนเย็นล้อมวงหมูกระทะฟรีริมคันนา",
-    img_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=500&q=80",
-    map_url: "https://www.openstreetmap.org/export/embed.html?bbox=100.02500%2C7.53600%2C100.06500%2C7.57600&layer=mapnik&marker=7.556%2C100.045"
-  }
+/* คลังรูปจากแหล่งภาพเสรี (Unsplash) เลือกตามบรรยากาศของที่พักแต่ละแบบ
+   หมายเหตุ: เป็นภาพประกอบตามธีม ไม่ใช่ภาพสถานที่จริง
+   แอดมินเปลี่ยน URL รูปเองได้ที่ระบบหลังบ้าน → แก้ไขที่พัก */
+const IMG = {
+  lake:    'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=600&q=80',
+  mountain:'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600&q=80',
+  field:   'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80',
+  resort:  'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80',
+  peak:    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80',
+  forest:  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80',
+  mist:    'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=600&q=80',
+  room:    'https://images.unsplash.com/photo-1542314831-c53cd4b85ca4?w=600&q=80',
+  hotel:   'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80',
+  house:   'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=600&q=80',
+};
+
+/* สร้างลิงก์แผนที่ OpenStreetMap จากพิกัด */
+function osmEmbed(lat, lng, d){
+  const r = d || 0.02;
+  const bbox = [lng - r, lat - r, lng + r, lat + r].map(n => n.toFixed(5)).join('%2C');
+  return 'https://www.openstreetmap.org/export/embed.html?bbox=' + bbox +
+         '&layer=mapnik&marker=' + lat + '%2C' + lng;
+}
+
+/* ---------- ที่พักในจังหวัดพัทลุง 20 แห่ง (ข้อมูลจำลองสำหรับทดสอบระบบ) ---------- */
+const RAW_PLACES = [
+  /* ===== โซนทะเลน้อย / ควนขนุน / ปากประ ===== */
+  [1,'บ้านริมเล ทะเลน้อย รีสอร์ท',1290,['ริมน้ำ','ฟรีหมูกระทะ','ล่องเรือชมบัว'],
+   'บ้านพักไม้ยกพื้นริมทะเลน้อย ตื่นเช้ามาชมทะเลบัวแดงบานเต็มผืนน้ำ พร้อมบริการล่องเรือหางยาวและหมูกระทะฟรีทุกห้องพัก',
+   'lake',7.789,100.141],
+  [2,'ทะเลบัวแดง โฮมสเตย์',850,['ริมน้ำ','ชมนก','อาหารเช้าฟรี'],
+   'โฮมสเตย์ของชาวบ้านริมทะเลน้อย เขตห้ามล่าสัตว์ป่าที่ใหญ่ที่สุดของไทย เหมาะกับสายดูนกและถ่ายภาพธรรมชาติ',
+   'lake',7.795,100.135],
+  [3,'ปากประ ซันไรส์ วิว',1150,['ริมน้ำ','ยอยักษ์','ชมพระอาทิตย์ขึ้น'],
+   'ที่พักริมคลองปากประ จุดชมยอยักษ์ยามพระอาทิตย์ขึ้นที่โด่งดังที่สุดของพัทลุง มีเรือรับส่งถึงจุดถ่ายภาพ',
+   'lake',7.700,100.180],
+  [4,'บ้านไม้ริมคลอง ปากประ',690,['ริมน้ำ','บ้านไม้','ตกปลา'],
+   'บ้านไม้เก่าบรรยากาศย้อนยุคริมคลองปากประ นั่งชิลดูวิถีชีวิตชาวประมงพื้นบ้าน ยืมอุปกรณ์ตกปลาได้ฟรี',
+   'house',7.706,100.176],
+  [5,'ควนขนุน คันทรี่โฮม',620,['กลางทุ่งนา','ปั่นจักรยาน','ราคาประหยัด'],
+   'เกสต์เฮาส์สไตล์ชนบทในอำเภอควนขนุน เดินทางสะดวกไปทะเลน้อยและวัดเขียนบางแก้ว มีจักรยานให้ยืมฟรี',
+   'field',7.760,100.050],
+
+  /* ===== โซนเมืองพัทลุง / ลำปำ ===== */
+  [6,'ลำปำ ริเวอร์วิว โฮมสเตย์',750,['ริมน้ำ','อาหารเช้าฟรี','ใกล้หาดแสนสุข'],
+   'โฮมสเตย์บรรยากาศชุมชนริมคลองลำปำ ใกล้หาดแสนสุขลำปำและวังเจ้าเมืองพัทลุง มีอาหารเช้าพื้นถิ่นเสิร์ฟฟรีทุกวัน',
+   'house',7.632,100.157],
+  [7,'หาดแสนสุขลำปำ รีสอร์ท',1450,['ริมทะเลสาบ','สระว่ายน้ำ','ร้านอาหารซีฟู้ด'],
+   'รีสอร์ทติดหาดแสนสุขลำปำ ริมทะเลสาบสงขลา มีสระว่ายน้ำและร้านอาหารซีฟู้ดสดใหม่ เหมาะกับครอบครัว',
+   'resort',7.636,100.163],
+  [8,'เมืองลุง บูทีค โฮเทล',1690,['ใจกลางเมือง','สไตล์บูทีค','ใกล้สถานีรถไฟ'],
+   'โรงแรมบูทีคกลางเมืองพัทลุง ตกแต่งร่วมสมัยผสมงานหัตถกรรมท้องถิ่น เดินไปสถานีรถไฟและตลาดโต้รุ่งได้',
+   'hotel',7.617,100.074],
+  [9,'วังเจ้าเมือง เกสต์เฮาส์',560,['ราคาประหยัด','ใกล้แหล่งท่องเที่ยว','สะอาด'],
+   'เกสต์เฮาส์เล็กๆ ใกล้วังเจ้าเมืองพัทลุงและพิพิธภัณฑ์ ห้องสะอาด ราคาเป็นมิตร เหมาะกับนักเดินทางคนเดียว',
+   'room',7.625,100.090],
+  [10,'เขาอกทะลุ วิวพอยท์',980,['วิวเขา','ใจกลางเมือง','ชมวิว 360 องศา'],
+   'ที่พักเชิงเขาอกทะลุ สัญลักษณ์ประจำจังหวัดพัทลุง เดินขึ้นยอดเขาชมวิวเมืองแบบ 360 องศาได้จากที่พัก',
+   'peak',7.617,100.078],
+
+  /* ===== โซนภูเขา / อุทยาน ===== */
+  [11,'ภูผาแคมป์ เขาปู่-เขาย่า',690,['วิวเขา','ทะเลหมอก','แคมป์ปิ้ง'],
+   'ลานกางเต็นท์และบ้านโดมกลางหุบเขาเขตอุทยานเขาปู่-เขาย่า ชมทะเลหมอกยามเช้า อากาศเย็นสบายตลอดปี',
+   'mist',7.708,99.789],
+  [12,'น้ำตกไพรวัลย์ รีสอร์ท',890,['น้ำตก','ธรรมชาติ','เล่นน้ำได้'],
+   'รีสอร์ทติดน้ำตกไพรวัลย์ อำเภอกงหรา เดินไม่กี่ก้าวถึงแอ่งน้ำใส เล่นน้ำได้ทั้งวัน บรรยากาศป่าเขาร่มรื่น',
+   'forest',7.480,99.960],
+  [13,'น้ำตกมโนราห์ โฮมสเตย์',640,['น้ำตก','โฮมสเตย์','เดินป่า'],
+   'โฮมสเตย์ใกล้น้ำตกมโนราห์ อำเภอศรีนครินทร์ มีเส้นทางเดินป่าศึกษาธรรมชาติและไกด์ท้องถิ่นนำทาง',
+   'forest',7.640,99.930],
+  [14,'ป่าพะยอม แคมป์ปิ้ง',450,['แคมป์ปิ้ง','ราคาประหยัด','กองไฟ'],
+   'ลานกางเต็นท์ริมลำธารในอำเภอป่าพะยอม มีจุดก่อกองไฟและห้องน้ำสะอาด เหมาะกับสายแคมป์งบน้อย',
+   'mountain',7.700,99.940],
+  [15,'ศรีบรรพต ภูเขาวิลล่า',1750,['วิวเขา','วิลล่าส่วนตัว','อ่างจากุซซี่'],
+   'วิลล่าส่วนตัวบนเนินเขาอำเภอศรีบรรพต วิวหุบเขาเต็มตา มีอ่างจากุซซี่กลางแจ้งชมดาว เหมาะกับคู่รัก',
+   'peak',7.680,99.850],
+
+  /* ===== โซนทุ่งนา / ชนบท ===== */
+  [16,'นาโปแก ฟาร์มสเตย์',590,['กลางทุ่งนา','ฟรีหมูกระทะ','ปั่นจักรยาน'],
+   'ฟาร์มสเตย์กลางทุ่งนาเขียวขจี สัมผัสวิถีชีวิตชาวนาเมืองลุง ปั่นจักรยานชมทุ่ง ตอนเย็นล้อมวงหมูกระทะฟรีริมคันนา',
+   'field',7.556,100.045],
+  [17,'บ้านนาโปแก วิลเลจ',820,['กลางทุ่งนา','ดำนาได้','อาหารพื้นถิ่น'],
+   'หมู่บ้านพักกลางทุ่งนาโปแก มีกิจกรรมดำนา เกี่ยวข้าว ทำขนมพื้นบ้าน และอาหารใต้รสจัดจ้านทุกมื้อ',
+   'field',7.560,100.040],
+
+  /* ===== โซนใต้ของจังหวัด ===== */
+  [18,'ตะโหมด ริมธาร',730,['ริมลำธาร','ธรรมชาติ','ชุมชนต้นแบบ'],
+   'ที่พักริมลำธารในชุมชนตะโหมด ชุมชนท่องเที่ยวต้นแบบ เรียนรู้การอยู่ร่วมกับป่าและชิมผลไม้ตามฤดูกาล',
+   'forest',7.290,100.020],
+  [19,'บางแก้ว เลควิว',1080,['ริมทะเลสาบ','ชมพระอาทิตย์ตก','ตกปลา'],
+   'ที่พักริมทะเลสาบสงขลาฝั่งอำเภอบางแก้ว จุดชมพระอาทิตย์ตกสวยที่สุดจุดหนึ่ง ใกล้วัดเขียนบางแก้ว',
+   'lake',7.440,100.170],
+  [20,'แหลมจองถนน ซีวิว',1250,['ริมทะเลสาบ','ดูโลมาอิรวดี','ซีฟู้ด'],
+   'รีสอร์ทริมทะเลสาบแหลมจองถนน จุดชมโลมาอิรวดีหายาก มีเรือนำเที่ยวและซีฟู้ดสดจากทะเลสาบทุกวัน',
+   'resort',7.520,100.230],
 ];
+
+const DEFAULT_PLACES = RAW_PLACES.map(([id, name, price, tags, desc, img, lat, lng]) => ({
+  id, name, price, tags, desc,
+  img_url: IMG[img] || FALLBACK_IMG,
+  map_url: osmEmbed(lat, lng),
+}));
 
 function initData(){
   if(USE_FIREBASE){
@@ -2243,33 +2322,125 @@ function renderAdminPlaces(){
         <td>${esc(p.name)}</td>
         <td>${Number(p.price).toLocaleString()} ฿</td>
         <td>${(p.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join(' ')}</td>
-        <td><button class="btn danger small" onclick="adminDelPlace(${p.id})">ลบ</button></td>
+        <td style="white-space:nowrap">
+          <button class="btn ghost small" onclick="editPlace(${p.id})">✏️ แก้ไข</button>
+          <button class="btn danger small" onclick="adminDelPlace(${p.id})">ลบ</button>
+        </td>
       </tr>`).join('');
 }
-function adminAddPlace(){
+let editingPlaceId = null;   /* null = โหมดเพิ่มใหม่, มีค่า = กำลังแก้ไขที่พักนั้น */
+
+/* ตัวอย่างรูปสดๆ ขณะวาง URL */
+function previewPlaceImg(){
+  const url = document.getElementById('np-img').value.trim();
+  const box = document.getElementById('np-preview');
+  if(!box) return;
+  box.innerHTML = url
+    ? `<img src="${esc(url)}" alt="ตัวอย่างรูป"
+         onerror="this.parentNode.innerHTML='<div class=\'ip-none\'>⚠️ โหลดรูปไม่สำเร็จ ลองลิงก์อื่นครับ</div>'">`
+    : `<div class="ip-none">ยังไม่ได้ใส่ลิงก์รูป (จะใช้รูปสำรองอัตโนมัติ)</div>`;
+}
+
+function clearPlaceForm(){
+  ['np-name','np-price','np-tags','np-img','np-map','np-desc']
+    .forEach(id => document.getElementById(id).value = '');
+  previewPlaceImg();
+}
+
+/* เข้าสู่โหมดแก้ไข: ดึงข้อมูลเดิมขึ้นฟอร์ม */
+function editPlace(id){
+  const p = DB.get('places').find(x => Number(x.id) === Number(id));
+  if(!p) return;
+  editingPlaceId = p.id;
+
+  document.getElementById('np-name').value  = p.name || '';
+  document.getElementById('np-price').value = p.price || '';
+  document.getElementById('np-tags').value  = (p.tags || []).join(', ');
+  document.getElementById('np-img').value   = p.img_url || '';
+  document.getElementById('np-map').value   = p.map_url || '';
+  document.getElementById('np-desc').value  = p.desc || '';
+  previewPlaceImg();
+
+  document.getElementById('np-form').classList.add('editing');
+  document.getElementById('np-title').textContent = '✏️ แก้ไขที่พัก: ' + p.name;
+  document.getElementById('np-save').textContent = '💾 บันทึกการแก้ไข';
+  document.getElementById('np-cancel').style.display = '';
+  hideMsg('np-msg');
+  document.getElementById('np-form').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function cancelEditPlace(){
+  editingPlaceId = null;
+  clearPlaceForm();
+  document.getElementById('np-form').classList.remove('editing');
+  document.getElementById('np-title').textContent = '➕ เพิ่มสถานที่พักใหม่';
+  document.getElementById('np-save').textContent = '💾 บันทึกสถานที่';
+  document.getElementById('np-cancel').style.display = 'none';
+  hideMsg('np-msg');
+}
+
+/* บันทึก: เพิ่มใหม่ หรือ อัปเดตของเดิม (ใช้ปุ่มเดียวกัน) */
+function adminSavePlace(){
   const name  = document.getElementById('np-name').value.trim();
   const price = parseInt(document.getElementById('np-price').value, 10);
-  const tags  = document.getElementById('np-tags').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const tags  = document.getElementById('np-tags').value.split(',').map(s => s.trim()).filter(Boolean);
   const img   = document.getElementById('np-img').value.trim();
   const map   = document.getElementById('np-map').value.trim();
   const desc  = document.getElementById('np-desc').value.trim();
-  if(!name || !price || price <= 0){ showMsg('np-msg','กรุณากรอกชื่อที่พักและราคาให้ถูกต้อง'); return }
+
+  if(!name || !price || price <= 0){
+    showMsg('np-msg','กรุณากรอกชื่อที่พักและราคาให้ถูกต้อง'); return;
+  }
+
   const places = DB.get('places');
-  const newId = places.length ? Math.max(...places.map(p=>p.id)) + 1 : 1;
+
+  /* ---------- โหมดแก้ไข ---------- */
+  if(editingPlaceId != null){
+    const idx = places.findIndex(x => Number(x.id) === Number(editingPlaceId));
+    if(idx < 0){ showMsg('np-msg','ไม่พบที่พักนี้แล้ว อาจถูกลบไปก่อนหน้า'); cancelEditPlace(); return }
+
+    const updated = Object.assign({}, places[idx], {
+      name, price,
+      tags: tags.length ? tags : (places[idx].tags || ['ที่พัก']),
+      desc: desc || places[idx].desc || 'ที่พักบรรยากาศดีในจังหวัดพัทลุง',
+      img_url: img || places[idx].img_url || FALLBACK_IMG,
+      map_url: map || places[idx].map_url || DEFAULT_MAP,
+    });
+    DB.setIndex('places', idx, updated);   /* เขียนเฉพาะรายการนี้ id เดิมไม่เปลี่ยน การจองเก่าไม่หลุด */
+
+    /* ถ้ากำลังเปิดดูที่พักนี้อยู่ฝั่งขวา ให้รีเฟรชทันที */
+    if(Number(selectedPlaceId) === Number(editingPlaceId)) selectPlace(editingPlaceId);
+
+    renderAdminPlaces();
+    renderAdminStats();
+    botSay(`อัปเดตข้อมูล "${name}" เรียบร้อยแล้วครับ ✅`);
+    cancelEditPlace();
+    showMsg('np-msg','บันทึกการแก้ไขเรียบร้อยแล้ว ✅', true);
+    return;
+  }
+
+  /* ---------- โหมดเพิ่มใหม่ ---------- */
+  const newId = places.length ? Math.max(...places.map(p => Number(p.id) || 0)) + 1 : 1;
   places.push({
     id: newId, name, price,
     tags: tags.length ? tags : ['ที่พักใหม่'],
     desc: desc || 'ที่พักบรรยากาศดีในจังหวัดพัทลุง',
     img_url: img || FALLBACK_IMG,
-    map_url: map || DEFAULT_MAP
+    map_url: map || DEFAULT_MAP,
   });
   DB.set('places', places);
-  ['np-name','np-price','np-tags','np-img','np-map','np-desc'].forEach(id => document.getElementById(id).value = '');
+  clearPlaceForm();
   showMsg('np-msg','เพิ่มสถานที่พักเรียบร้อยแล้ว ✅', true);
   renderAdminPlaces();
+  renderAdminStats();
 }
+
+/* คงชื่อเดิมไว้เผื่อมีการเรียกจากที่อื่น */
+function adminAddPlace(){ adminSavePlace() }
+
 function adminDelPlace(id){
   if(!confirm('ยืนยันการลบสถานที่พักนี้?')) return;
+  if(Number(editingPlaceId) === Number(id)) cancelEditPlace();
   DB.set('places', DB.get('places').filter(p => p.id !== id));
   if(selectedPlaceId === id){
     selectedPlaceId = null;
