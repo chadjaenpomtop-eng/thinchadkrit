@@ -344,6 +344,220 @@ td select.frame-sel{
 .rank-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,#5cbb8b,#2e7d54);transition:width .5s ease}
 .stat-empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:26px 10px}
 
+/* ============ ฟองแชทของเจ้าหน้าที่ ============ */
+.msg.admin{align-self:flex-start}
+.msg.admin .bubble{
+  background:linear-gradient(135deg,#fdf3e2,#f8e6c4);border:1px solid #f2ddb6;
+  color:#5a3d0d;border-bottom-left-radius:4px;
+}
+.msg.admin .who{color:#8a5d16;font-weight:600;font-family:'Prompt',sans-serif}
+.live-banner{
+  align-self:center;background:var(--green-100);border:1px dashed var(--green-500);
+  color:var(--green-900);font-family:'Prompt',sans-serif;font-size:12.5px;
+  padding:7px 16px;border-radius:99px;
+}
+
+/* ============ กระดิ่งแจ้งเตือน ============ */
+.bell-wrap{position:relative}
+#btn-bell{position:relative}
+.bell-dot{
+  position:absolute;top:6px;right:10px;min-width:18px;height:18px;padding:0 5px;
+  background:#c85b4a;color:#fff;border-radius:99px;font-size:11px;font-weight:700;
+  display:none;align-items:center;justify-content:center;font-family:'Prompt',sans-serif;
+  box-shadow:0 0 0 2px var(--green-700);
+}
+.bell-dot.show{display:flex;animation:pulse 1.6s infinite}
+.notif-panel{
+  position:fixed;z-index:80;right:auto;left:18px;top:auto;
+  width:290px;max-height:60vh;overflow-y:auto;
+  background:var(--bg-panel);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow-lg);padding:10px;display:none;
+}
+.notif-panel.open{display:block;animation:rise .25s ease}
+.notif-panel h4{
+  font-family:'Prompt',sans-serif;font-size:13.5px;color:var(--green-900);
+  padding:4px 6px 10px;display:flex;justify-content:space-between;align-items:center;
+}
+.notif-item{
+  display:flex;gap:9px;padding:9px 10px;border-radius:11px;cursor:pointer;
+  transition:background .15s;align-items:flex-start;
+}
+.notif-item:hover{background:var(--green-100)}
+.notif-item .ni-ic{font-size:17px;flex-shrink:0}
+.notif-item .ni-txt{font-size:12.5px;line-height:1.5;color:var(--ink)}
+.notif-item .ni-time{font-size:11px;color:var(--ink-soft);margin-top:2px}
+.notif-empty{text-align:center;color:var(--ink-soft);font-size:12.5px;padding:22px 8px}
+
+/* ============ แชทผู้ใช้ (ฝั่งแอดมิน) ============ */
+.chat-users{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px}
+.cu-item{
+  min-width:132px;background:#fdfffd;border:1.5px solid var(--line);border-radius:13px;
+  padding:9px 11px;cursor:pointer;position:relative;transition:transform .15s,border-color .15s;
+}
+.cu-item:hover{transform:translateY(-2px)}
+.cu-item.on{border-color:var(--green-500);background:var(--green-100)}
+.cu-name{font-family:'Prompt',sans-serif;font-size:13px;font-weight:600;color:var(--green-900);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cu-last{font-size:11.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.cu-badge{position:absolute;top:-5px;right:-5px;background:#c85b4a;color:#fff;
+  border-radius:99px;min-width:19px;height:19px;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;padding:0 5px}
+.ac-box{background:#fdfffd;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.ac-head{
+  padding:10px 14px;background:#eef7f0;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.ac-head b{font-family:'Prompt',sans-serif;font-size:14px;color:var(--green-900)}
+.ac-log{height:260px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
+.ac-msg{max-width:82%;padding:8px 12px;border-radius:13px;font-size:13.5px;line-height:1.55;white-space:pre-line}
+.ac-msg.u{align-self:flex-end;background:var(--green-700);color:#fff;border-bottom-right-radius:3px}
+.ac-msg.b{align-self:flex-start;background:var(--green-100);border-bottom-left-radius:3px}
+.ac-msg.a{align-self:flex-start;background:#fdf3e2;border:1px solid #f2ddb6;color:#5a3d0d}
+.ac-msg small{display:block;font-size:10.5px;opacity:.7;margin-top:3px}
+.ac-input{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#eef7f0}
+.ac-input input{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:9px 13px;
+  font-family:'Sarabun',sans-serif;font-size:14px;background:#fff}
+.switch-live{
+  display:flex;align-items:center;gap:8px;font-family:'Prompt',sans-serif;font-size:12.5px;
+  background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:5px 12px;cursor:pointer;
+}
+.switch-live.on{background:var(--amber);border-color:var(--amber);color:#3d2a08;font-weight:600}
+
+/* ============ สถานะการจอง ============ */
+.role-pill.st-pending{background:#fdf3e2;color:#8a5d16;border:1px solid #f2ddb6}
+.role-pill.st-confirmed{background:var(--green-100);color:var(--green-900);border:1px solid #c3e2cf}
+.role-pill.st-done{background:#e6ecfb;color:#2f4b8f;border:1px solid #c4d2f0}
+.role-pill.st-rejected{background:#fbe9e5;color:#a13a2a;border:1px solid #f0c8bd}
+/* 🛡️ กรอบแอดมิน (เครื่องแบบ) */
+.avatar.fr-admin::before{
+  background:conic-gradient(#fff4cf,#e8a13d,#3a2a08,#ffdf80,#1a1a1a,#e8a13d,#fff4cf);
+  animation:frSpin 4.5s linear infinite;
+  box-shadow:0 0 14px rgba(232,161,61,.7), 0 0 3px #000;
+}
+.avatar.fr-admin::after{
+  content:'🛡️';position:absolute;top:-11px;right:-9px;font-size:.42em;z-index:3;
+  animation:frFloat 2.8s ease-in-out infinite;
+}
+.admin-tag{
+  font-size:9.5px;font-family:'Prompt',sans-serif;font-weight:700;letter-spacing:.5px;
+  background:linear-gradient(135deg,#e8a13d,#8a5d16);color:#fff;
+  padding:1px 7px;border-radius:99px;margin-left:5px;vertical-align:middle;
+}
+
+/* 🏆 ระดับสมาชิก */
+.tier-box{
+  background:linear-gradient(135deg,#eef7f0,#dff0e6);border:1px solid var(--line);
+  border-radius:14px;padding:13px 15px;margin-top:4px;
+}
+.tier-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.tier-name{font-family:'Prompt',sans-serif;font-size:15px;font-weight:600;color:var(--green-900)}
+.tier-next{font-size:11.5px;color:var(--ink-soft);text-align:right}
+.tier-track{height:9px;background:#fff;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.tier-bar{height:100%;background:linear-gradient(90deg,#5cbb8b,#2e7d54);border-radius:99px;transition:width .6s ease}
+
+/* 🎤 ปุ่มไมค์ */
+#btn-mic{padding:11px 14px;background:var(--green-700)}
+#btn-mic.rec{background:#c85b4a;animation:pulse 1.1s infinite}
+
+/* 🤖 ปุ่มตัวเลือกที่บอทเสนอ */
+.guide-chips{align-self:flex-start;display:flex;flex-wrap:wrap;gap:7px;max-width:88%}
+.guide-chips button{
+  font-family:'Prompt',sans-serif;font-size:13.5px;background:#fff;color:var(--green-700);
+  border:1.5px solid var(--green-500);padding:8px 15px;border-radius:99px;cursor:pointer;
+  transition:transform .15s, background .15s;
+}
+.guide-chips button:hover{transform:translateY(-2px);background:var(--green-100)}
+.guide-chips button:disabled{opacity:.45;cursor:default;transform:none}
+
+/* 🐣 มาสคอตโผล่ขอบจอ */
+#peek{
+  position:fixed;left:14px;bottom:-120px;width:96px;height:120px;z-index:55;
+  cursor:pointer;transition:bottom .6s cubic-bezier(.34,1.4,.64,1);
+  -webkit-tap-highlight-color:transparent;
+}
+#peek.up{bottom:-18px}
+#peek svg{width:100%;height:100%;overflow:visible;display:block}
+#peek .peek-bubble{
+  position:absolute;left:88px;bottom:76px;white-space:nowrap;
+  background:var(--bg-panel);border:1.5px solid var(--line);border-radius:14px;
+  padding:8px 14px;font-family:'Prompt',sans-serif;font-size:12.5px;color:var(--green-900);
+  box-shadow:var(--shadow);opacity:0;transition:opacity .3s;pointer-events:none;max-width:60vw;
+  white-space:normal;
+}
+#peek.talk .peek-bubble{opacity:1}
+@media (max-width:760px){ #peek{width:74px;height:92px;left:8px} #peek .peek-bubble{left:66px;bottom:58px;font-size:11.5px} }
+
+/* 😴 โหมดหลับ */
+.sleeping .cap-head, .sleeping .trio-head{animation:snooze 3.4s ease-in-out infinite}
+@keyframes snooze{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(2px) rotate(-6deg)}}
+.sleeping .pupil{opacity:0}
+.sleeping .lid{animation:none!important;transform:scaleY(1)!important}
+.zzz{
+  position:absolute;font-family:'Prompt',sans-serif;font-weight:700;color:var(--green-500);
+  pointer-events:none;animation:zzzUp 2.6s ease-out infinite;opacity:0;
+}
+@keyframes zzzUp{0%{opacity:0;transform:translate(0,0) scale(.6)}25%{opacity:1}100%{opacity:0;transform:translate(16px,-26px) scale(1.15)}}
+
+/* 🎉 ฉลองตอนจองสำเร็จ */
+.celebrate{position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;display:none}
+.celebrate.on{display:block}
+.confetti{position:absolute;width:9px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
+.cheer-run{
+  position:absolute;bottom:6vh;width:110px;height:140px;
+  animation:runAcross 3s cubic-bezier(.4,0,.6,1) forwards;
+}
+.cheer-run svg{width:100%;height:100%;overflow:visible}
+@keyframes runAcross{
+  0%{left:-140px;transform:translateY(0)}
+  35%{left:32%;transform:translateY(-18px)}
+  50%{left:44%;transform:translateY(0)}
+  65%{left:56%;transform:translateY(-18px)}
+  100%{left:110%;transform:translateY(0)}
+}
+
+/* 🗓️ ปฏิทินห้องว่าง */
+.cal-box{background:#fdfffd;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:8px}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.cal-head b{font-family:'Prompt',sans-serif;font-size:13.5px;color:var(--green-900)}
+.cal-nav{background:none;border:1px solid var(--line);border-radius:8px;cursor:pointer;
+  padding:3px 10px;font-size:14px;color:var(--green-700)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-grid .dow{font-size:10.5px;color:var(--ink-soft);text-align:center;font-family:'Prompt',sans-serif;padding-bottom:3px}
+.cal-day{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;border-radius:8px;background:var(--green-100);color:var(--green-900);
+}
+.cal-day.busy{background:#fbe9e5;color:#a13a2a;font-weight:600;text-decoration:line-through}
+.cal-day.past{background:#f1f4f2;color:#b6c3bb}
+.cal-day.empty{background:transparent}
+.cal-legend{display:flex;gap:12px;margin-top:9px;font-size:11.5px;color:var(--ink-soft);flex-wrap:wrap}
+.cal-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:4px}
+
+/* 🖼️ แกลเลอรีหลายรูป */
+.gal{position:relative}
+.gal-thumbs{display:flex;gap:6px;padding:8px 16px 0}
+.gal-thumbs img{
+  width:46px;height:34px;object-fit:cover;border-radius:7px;cursor:pointer;
+  border:2px solid transparent;transition:border-color .15s,transform .15s;
+}
+.gal-thumbs img:hover{transform:translateY(-2px)}
+.gal-thumbs img.on{border-color:var(--green-500)}
+
+/* 🌤️ อากาศ */
+.weather-box{
+  display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,#eaf4fb,#dcecf8);
+  border:1px solid #c9dff0;border-radius:13px;padding:10px 13px;margin-top:2px;
+}
+.weather-box .wx-ic{font-size:30px;line-height:1}
+.weather-box .wx-t{font-family:'Prompt',sans-serif;font-size:18px;font-weight:600;color:#1c5b96}
+.weather-box .wx-d{font-size:12px;color:#3d6f9e;line-height:1.5}
+
+.privacy-note{
+  align-self:center;font-size:11.5px;color:var(--ink-soft);text-align:center;
+  background:#eef7f0;border-radius:10px;padding:6px 12px;line-height:1.5;
+}
+
 /* ---------- รายการจองแบบการ์ด (สวยกว่าตาราง + ไม่ตกบรรทัด) ---------- */
 .bk-list{display:flex;flex-direction:column;gap:9px}
 .bk-item{
@@ -823,6 +1037,36 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
 <!-- ฉากหลังตอนเปิดเมนู -->
 <div class="drawer-backdrop" onclick="toggleDrawer(false)"></div>
 
+<!-- 🐣 มาสคอตแอบโผล่ -->
+<div id="peek" onclick="peekTalk()">
+  <div class="peek-bubble" id="peek-bubble"></div>
+  <svg viewBox="0 0 130 170" xmlns="http://www.w3.org/2000/svg">
+    <g>
+      <circle cx="65" cy="56" r="41" fill="#e8a13d"/>
+      <rect x="63" y="8" width="4" height="14" rx="2" fill="#c9832a"/>
+      <circle cx="65" cy="8" r="6" fill="#3a9d6e"/>
+      <g class="eye"><circle class="white" cx="52" cy="53" r="12" fill="#fdfffd"/>
+        <circle class="pupil" cx="52" cy="53" r="5.5" fill="#22352b" data-max="4"/></g>
+      <g class="eye"><circle class="white" cx="78" cy="53" r="12" fill="#fdfffd"/>
+        <circle class="pupil" cx="78" cy="53" r="5.5" fill="#22352b" data-max="4"/></g>
+      <path d="M55 73 Q65 83 75 73" stroke="#8a5d16" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="36" cy="66" rx="6" ry="4" fill="#fff" opacity=".45"/>
+      <ellipse cx="94" cy="66" rx="6" ry="4" fill="#fff" opacity=".45"/>
+      <rect x="16" y="96" width="15" height="30" rx="7.5" fill="#c9832a"/>
+      <rect x="99" y="96" width="15" height="30" rx="7.5" fill="#c9832a"/>
+    </g>
+  </svg>
+</div>
+
+<!-- 🎉 ฉากฉลอง -->
+<div class="celebrate" id="celebrate"></div>
+
+<!-- แผงการแจ้งเตือน -->
+<div class="notif-panel" id="notif-panel">
+  <h4>🔔 การแจ้งเตือน <button class="btn ghost small" onclick="markAllRead()">อ่านทั้งหมด</button></h4>
+  <div id="notif-list"></div>
+</div>
+
 <!-- ================= แท็บล่าง (เฉพาะมือถือ) ================= -->
 <nav class="mobile-tabs">
   <button id="tab-chat" class="active" onclick="setMobileView('chat')">
@@ -892,6 +1136,8 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
       <button class="active" onclick="closeDrawer();goHome()">🏠 หน้าหลัก</button>
       <button onclick="closeDrawer();openProfile()">👤 โปรไฟล์</button>
       <button id="btn-admin" onclick="closeDrawer();openAdmin()">🛠️ ระบบหลังบ้าน</button>
+      <button id="btn-bell" onclick="toggleNotifs()">🔔 การแจ้งเตือน<span class="bell-dot" id="bell-dot">0</span></button>
+      <button id="btn-toon" onclick="toggleToon()">🐣 ตัวการ์ตูน: เปิด</button>
       <button id="btn-sound" onclick="closeDrawer();toggleSound()">🔊 เสียง: เปิด</button>
     </nav>
 
@@ -939,11 +1185,14 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
       <button class="chip" onclick="quickAsk('มีฟรีหมูกระทะไหม')">🍖 ฟรีหมูกระทะ</button>
       <button class="chip" onclick="quickAsk('งบไม่เกิน 800 บาท')">💸 งบไม่เกิน 800</button>
       <button class="chip" onclick="quickAsk('ดูการจองของฉัน')">📋 การจองของฉัน</button>
+      <button class="chip" onclick="startGuide()">🧭 ให้บอทช่วยเลือก</button>
+      <button class="chip" onclick="requestHuman()">🙋 คุยกับเจ้าหน้าที่</button>
     </div>
 
     <div class="chat-input">
       <input id="chat-input" type="text" placeholder="พิมพ์คุยกับน้องกัปตันได้เลย เช่น อยากได้ที่พักวิวเขา..."
              onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="btn" id="btn-mic" onclick="toggleMic()" title="พูดแทนพิมพ์">🎤</button>
       <button class="btn" onclick="sendMsg()">ส่ง ➤</button>
     </div>
   </main>
@@ -962,13 +1211,19 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
         กดที่การ์ดที่พักในช่องแชท<br>เพื่อดูรูปภาพ รายละเอียด และตำแหน่งบนแผนที่
       </div>
       <div class="detail-content" id="detail-content">
-        <img id="d-img" src="" alt="รูปที่พัก">
+        <div class="gal">
+          <img id="d-img" src="" alt="รูปที่พัก">
+          <div class="gal-thumbs" id="d-thumbs"></div>
+        </div>
         <div class="detail-inner">
           <h3 id="d-name"></h3>
           <div class="price"><span id="d-price"></span> ฿ <small>/ คืน</small></div>
           <div class="tags" id="d-tags"></div>
           <p id="d-desc"></p>
+          <div class="weather-box" id="d-weather" style="display:none"></div>
+          <div class="cal-box" id="d-cal"></div>
           <button class="btn" id="d-book" onclick="">📅 จองที่พักนี้</button>
+          <button class="btn ghost" id="d-nav" onclick="">🗺️ นำทางไปที่นี่</button>
         </div>
       </div>
     </div>
@@ -1058,6 +1313,10 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
     <div class="hint" id="pf-login-hint"></div>
     <div class="form-msg" id="pf-msg"></div>
 
+    <!-- ระดับสมาชิก -->
+    <div class="sec-label">🏆 ระดับสมาชิก</div>
+    <div class="tier-box" id="pf-tier"></div>
+
     <!-- กรอบโปรไฟล์: แอดมินมอบให้เท่านั้น -->
     <div class="sec-label">🖼️ กรอบโปรไฟล์ของฉัน</div>
     <div class="frame-gallery" id="pf-frames"></div>
@@ -1083,6 +1342,7 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
       <button data-tab="users" onclick="switchTab('users')">👥 จัดการบัญชีผู้ใช้</button>
       <button data-tab="bookings" onclick="switchTab('bookings')">📋 จัดการการจอง</button>
       <button data-tab="stats" onclick="switchTab('stats')">📊 สถิติ</button>
+      <button data-tab="chats" onclick="switchTab('chats')">💬 แชทผู้ใช้<span class="cu-badge" id="chat-badge" style="display:none;position:static;margin-left:6px"></span></button>
     </div>
 
     <!-- จัดการสถานที่ -->
@@ -1098,6 +1358,8 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
             <input id="np-img" placeholder="https://..." oninput="previewPlaceImg()">
             <div class="img-preview" id="np-preview"></div>
           </div>
+          <div class="field"><label>รูปเพิ่มเติม (คั่นด้วย , )</label>
+            <input id="np-imgs" placeholder="https://รูป2, https://รูป3"></div>
           <div class="field"><label>URL แผนที่ (embed)</label><input id="np-map" placeholder="ลิงก์ OpenStreetMap embed หรือพิกัด q=lat,lng"></div>
           <div class="field"><label>คำอธิบาย</label><input id="np-desc" placeholder="บรรยากาศที่พักโดยย่อ"></div>
         </div>
@@ -1105,6 +1367,7 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
           <button class="btn small" id="np-save" onclick="adminSavePlace()">💾 บันทึกสถานที่</button>
           <button class="btn ghost small" id="np-cancel" style="display:none" onclick="cancelEditPlace()">ยกเลิกการแก้ไข</button>
+          <button class="btn amber small" onclick="adminResetPlaces()">🔄 โหลดที่พักมาตรฐาน 20 แห่ง</button>
         </div>
       </div>
       <table>
@@ -1136,9 +1399,28 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
     <!-- จัดการการจอง -->
     <div class="admin-section" id="tab-bookings">
       <table>
-        <thead><tr><th>#</th><th>ที่พัก</th><th>ผู้จอง</th><th>ผู้เข้าพัก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>คืน</th><th>ราคารวม</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>ที่พัก</th><th>ผู้จอง</th><th>ผู้เข้าพัก</th><th>เช็คอิน</th><th>เช็คเอาท์</th><th>คืน</th><th>ราคารวม</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
         <tbody id="tb-bookings"></tbody>
       </table>
+    </div>
+
+    <!-- แชทผู้ใช้ -->
+    <div class="admin-section" id="tab-chats">
+      <div class="hint" style="margin-bottom:10px">
+        เลือกผู้ใช้เพื่อดูบทสนทนา · เปิดสวิตช์ <b>"เข้าคุยแทนบอท"</b> เพื่อให้บอทหยุดตอบชั่วคราวและคุณคุยเอง
+      </div>
+      <div class="chat-users" id="chat-users"></div>
+      <div class="ac-box">
+        <div class="ac-head">
+          <b id="ac-title">ยังไม่ได้เลือกผู้ใช้</b>
+          <div class="switch-live" id="ac-switch" onclick="toggleHandoff()">🤖 บอทตอบอยู่</div>
+        </div>
+        <div class="ac-log" id="ac-log"></div>
+        <div class="ac-input">
+          <input id="ac-text" placeholder="พิมพ์ข้อความถึงผู้ใช้..." onkeydown="if(event.key==='Enter')adminSendChat()">
+          <button class="btn" onclick="adminSendChat()">ส่ง ➤</button>
+        </div>
+      </div>
     </div>
 
     <!-- สถิติ -->
@@ -1184,7 +1466,7 @@ const USE_FIREBASE = (typeof firebase !== 'undefined')
                   && !String(firebaseConfig.apiKey).includes('YOUR_');
 
 let fdb = null;
-const cache = { places: null, users: null, bookings: null };
+const cache = { places: null, users: null, bookings: null, chats: null };
 
 let _ready = false, _readyCbs = [];
 function whenReady(cb){ _ready ? cb() : _readyCbs.push(cb) }
@@ -1256,6 +1538,13 @@ function setConnStatus(text){
 }
 
 function onDataChanged(key){
+  /* ข้อความใหม่จากเจ้าหน้าที่ / ผู้ใช้ */
+  if(key === 'chats'){
+    if(typeof syncMyChat === 'function') syncMyChat();
+    if(typeof renderChatUsers === 'function') renderChatUsers();
+    if(typeof renderChatLog === 'function') renderChatLog();
+  }
+  if(typeof renderBell === 'function') renderBell();
   if(key === 'bookings' && typeof refreshBookingButtons === 'function') refreshBookingButtons();
   if(key === 'users' && typeof renderUserBox === 'function') renderUserBox();
   const adminOverlay = document.getElementById('admin-overlay');
@@ -1374,13 +1663,31 @@ const DEFAULT_PLACES = RAW_PLACES.map(([id, name, price, tags, desc, img, lat, l
   map_url: osmEmbed(lat, lng),
 }));
 
+/* คืน "สำเนา" ของข้อมูลต้นแบบเสมอ
+   ถ้าใช้ตัวแปรตรงๆ เมื่อแอดมินแก้ข้อมูล ตัวต้นแบบจะถูกแก้ตามไปด้วย
+   ทำให้ปุ่มรีเซ็ตคืนค่าเดิมไม่ได้ */
+function defaultPlaces(){
+  return JSON.parse(JSON.stringify(DEFAULT_PLACES));
+}
+
 function initData(){
   if(USE_FIREBASE){
     firebase.initializeApp(firebaseConfig);
     fdb = firebase.database();
     setConnStatus('กำลังเชื่อมต่อ Firebase…');
 
-    ['places','users','bookings'].forEach(key => {
+    /* ---- ตรวจเวอร์ชันข้อมูลบน Firebase ----
+       เดิมระบบ seed เฉพาะตอนฐานข้อมูลว่าง ทำให้คนที่มีข้อมูลชุดเก่าอยู่แล้ว
+       ไม่ได้รับที่พักชุดใหม่ จึงต้องเทียบเวอร์ชันแล้วอัปเดตให้ครั้งเดียว */
+    fdb.ref('data_version').once('value').then(snap => {
+      if(String(snap.val() || '') !== DATA_VERSION){
+        fdb.ref('places').set(defaultPlaces());
+        fdb.ref('data_version').set(DATA_VERSION);
+        console.log('อัปเดตข้อมูลที่พักเป็นชุดใหม่ (เวอร์ชัน ' + DATA_VERSION + ')');
+      }
+    }).catch(err => console.warn('ตรวจเวอร์ชันข้อมูลไม่สำเร็จ:', err));
+
+    ['places','users','bookings','chats'].forEach(key => {
       fdb.ref(key).on('value', snap => {
         const v = snap.val();
         /* เก็บคีย์ Firebase (_key) ไว้ด้วย เพื่อลบ/แก้เฉพาะรายการนั้นได้ */
@@ -1392,7 +1699,7 @@ function initData(){
         if(key === 'places'){
           if(cache.places.length === 0 && !initData._seeded){
             initData._seeded = true;
-            fdb.ref('places').set(DEFAULT_PLACES);
+            fdb.ref('places').set(defaultPlaces());
           }
           markReady();
         }
@@ -1407,11 +1714,12 @@ function initData(){
   }
 
   if(localStorage.getItem('data_version') !== DATA_VERSION){
-    DB.set('places', DEFAULT_PLACES);
+    DB.set('places', defaultPlaces());
     localStorage.setItem('data_version', DATA_VERSION);
   }
   if(!localStorage.getItem('users'))    DB.set('users', []);
   if(!localStorage.getItem('bookings')) DB.set('bookings', []);
+  if(!localStorage.getItem('chats'))    DB.set('chats', []);
   setConnStatus('โหมดออฟไลน์ (localStorage)');
   markReady();
 }
@@ -1435,7 +1743,7 @@ function renderUserBox(){
       <div class="ub-row">
         ${avatarBox(p)}
         <div style="min-width:0">
-          <div class="uname">${esc(p.displayName)}</div>
+          <div class="uname">${esc(p.displayName)}${u.role === 'admin' ? '<span class="admin-tag">ADMIN</span>' : ''}</div>
           <div class="urole" style="margin:0">@${esc(p.username)}</div>
         </div>
       </div>
@@ -1536,9 +1844,33 @@ function frameName(id){
   return f ? f.name : 'ไม่มีกรอบ';
 }
 /* คลาส CSS ของกรอบ (มีเฉพาะกรอบที่แอดมินมอบให้) */
+/* ---------- ระดับสมาชิก (เลื่อนขั้นตามจำนวนการจอง) ---------- */
+const TIERS = [
+  { min:10, id:'vip',      name:'VIP เมืองลุง', icon:'👑', frame:'gold' },
+  { min:5,  id:'explorer', name:'นักผจญภัย',   icon:'⭐', frame:'sparkle' },
+  { min:3,  id:'traveler', name:'นักเดินทาง',  icon:'🌿', frame:'emerald' },
+  { min:0,  id:'guest',    name:'ผู้มาเยือน',  icon:'🌱', frame:'' },
+];
+function bookingCountOf(username){
+  return DB.get('bookings').filter(b =>
+    b && b.username === username && statusOf(b) !== 'rejected').length;
+}
+function tierOf(username){
+  const n = bookingCountOf(username);
+  const t = TIERS.find(x => n >= x.min) || TIERS[TIERS.length - 1];
+  const nextIdx = TIERS.findIndex(x => x.id === t.id) - 1;
+  const next = nextIdx >= 0 ? TIERS[nextIdx] : null;
+  return { ...t, count:n, next };
+}
+
+/* ลำดับความสำคัญของกรอบ: แอดมิน > กรอบที่ได้รับมอบ > กรอบตามระดับสมาชิก */
 function frameCls(p){
-  const id = p && p.frame ? String(p.frame) : '';
-  return (id && FRAMES.some(f => f.id === id)) ? ('fr-' + id) : '';
+  if(!p) return '';
+  const given = p.frame ? String(p.frame) : '';
+  if(given && FRAMES.some(f => f.id === given)) return 'fr-' + given;
+  if(p.role === 'admin') return 'fr-admin';
+  const tf = p.username ? tierOf(p.username).frame : '';
+  return tf ? 'fr-' + tf : '';
 }
 
 /* อ่านโปรไฟล์เต็มของผู้ใช้ปัจจุบัน (ชื่อที่แสดง/รูป เก็บใน users) */
@@ -1667,7 +1999,8 @@ function activeBooking(placeId){
   if(!s) return null;
   const t = todayStr();
   return DB.get('bookings').find(b =>
-    b && b.username === s.username && Number(b.placeId) === Number(placeId) && b.checkout >= t) || null;
+    b && b.username === s.username && Number(b.placeId) === Number(placeId) &&
+    b.checkout >= t && statusOf(b) !== 'rejected') || null;
 }
 
 /* ปรับข้อความ/สีปุ่มตามสถานะ */
@@ -1675,9 +2008,10 @@ function paintBookBtn(btn, placeId){
   if(!btn) return;
   const b = activeBooking(placeId);
   if(b){
-    btn.textContent = '⏳ กำลังจอง';
+    const st = STATUS[statusOf(b)] || STATUS.pending;
+    btn.textContent = st.ic + ' ' + st.label;
     btn.classList.add('booked');
-    btn.title = `จองแล้ว: ${b.checkin} ถึง ${b.checkout}`;
+    btn.title = `${st.label}: ${fmtDate(b.checkin)} ถึง ${fmtDate(b.checkout)}`;
   }else{
     btn.textContent = btn.dataset.full === '1' ? '📅 จองที่พักนี้' : '📅 จองเลย';
     btn.classList.remove('booked');
@@ -1748,6 +2082,20 @@ function openProfile(){
     .map(em => `<button data-em="${em}" onclick="pickEmoji('${em}')">${em}</button>`).join('');
   markEmoji(p.avatar && !p.avatar.startsWith('data:') && !p.avatar.startsWith('http') ? p.avatar : '');
 
+  /* ---------- ระดับสมาชิก ---------- */
+  const tier = tierOf(p.username);
+  const nextTxt = tier.next
+    ? `อีก ${tier.next.min - tier.count} ครั้ง → ${tier.next.icon} ${tier.next.name}`
+    : 'ระดับสูงสุดแล้ว 🎉';
+  const pct = tier.next ? Math.min(100, (tier.count / tier.next.min) * 100) : 100;
+  document.getElementById('pf-tier').innerHTML = `
+    <div class="tier-top">
+      <div class="tier-name">${tier.icon} ${tier.name}</div>
+      <div class="tier-next">จองแล้ว ${tier.count} ครั้ง<br>${nextTxt}</div>
+    </div>
+    <div class="tier-track"><div class="tier-bar" style="width:${pct}%"></div></div>
+    ${tier.frame ? `<div class="hint" style="margin-top:8px">🎁 ระดับนี้ได้กรอบ "${frameName(tier.frame)}" อัตโนมัติ</div>` : ''}`;
+
   /* แกลเลอรีกรอบ: กรอบที่ได้รับจะสว่าง ที่เหลือมีแม่กุญแจ */
   const myFrame = p.frame || '';
   document.getElementById('pf-frames').innerHTML = FRAMES.map(f => {
@@ -1759,6 +2107,10 @@ function openProfile(){
       <div class="fi-name">${esc(f.name)}</div>
     </div>`;
   }).join('');
+  if(p.role === 'admin'){
+    document.getElementById('pf-frame-note').innerHTML =
+      `🛡️ คุณเป็น <b>ผู้ดูแลระบบ</b> จึงได้กรอบแอดมินอัตโนมัติ (ถ้าได้รับกรอบพิเศษจะใช้กรอบนั้นแทน)`;
+  }else
   document.getElementById('pf-frame-note').innerHTML = myFrame
     ? `🎉 คุณได้รับกรอบ <b>"${esc(frameName(myFrame))}"</b> จากผู้ดูแลระบบแล้ว! กรอบจะแสดงรอบรูปโปรไฟล์ของคุณทุกที่ในเว็บ`
     : `🔒 กรอบโปรไฟล์เป็นของพิเศษที่ <b>ผู้ดูแลระบบเป็นผู้มอบให้เท่านั้น</b> ผู้ใช้เปลี่ยนเองไม่ได้ครับ`;
@@ -1780,7 +2132,7 @@ function openProfile(){
             <div class="bk-name">${esc(b.placeName)}</div>
             <div class="bk-date"><b>${fmtDate(b.checkin)}</b> → <b>${fmtDate(b.checkout)}</b> · ${esc(String(b.guests))} คน · <b style="color:var(--green-700)">${bookingTotal(b).toLocaleString()} ฿</b></div>
           </div>
-          <span class="role-pill ${active ? 'admin' : 'user'}">${active ? 'กำลังจอง' : 'เข้าพักแล้ว'}</span>
+          ${statusPill(active ? statusOf(b) : 'done')}
         </div>`;
       }).join('') +
       `</div>`;
@@ -1807,7 +2159,9 @@ function botSay(text){
   div.innerHTML = `<span class="who">น้องกัปตัน 🤖</span><div class="bubble">${esc(text)}</div>`;
   chatBody.appendChild(div);
   scrollChat();
-  if(typeof animateTalk === 'function') animateTalk();   /* ปากขยับเวลาพูด */
+  if(typeof animateTalk === 'function') animateTalk();
+  const me = currentUser();
+  if(me && typeof saveMsg === 'function') saveMsg(me.username, 'bot', text);
 }
 function userSay(text){
   const p = myProfile();
@@ -1819,6 +2173,7 @@ function userSay(text){
   div.innerHTML = `<span class="who">${who}</span><div class="bubble">${esc(text)}</div>`;
   chatBody.appendChild(div);
   scrollChat();
+  if(p && typeof saveMsg === 'function') saveMsg(p.username, 'user', text);
 }
 
 function showCarousel(places){
@@ -1863,6 +2218,13 @@ function sendMsg(){
   if(!text) return;
   input.value = '';
   userSay(text);
+
+  /* เจ้าหน้าที่กำลังดูแลอยู่ → บอทเงียบ รอคนตอบ */
+  const me = currentUser();
+  if(me && isLiveChat(me.username)){
+    showLiveBanner('ส่งถึงเจ้าหน้าที่แล้ว กำลังรอตอบกลับ… 👤');
+    return;
+  }
   showTyping();
   setTimeout(() => { hideTyping(); botReply(text); }, 600);
 }
@@ -1916,9 +2278,15 @@ function findPlacesByText(t){
 
 function botReply(raw){
   const t = raw.toLowerCase().replace(/\s+/g,' ').trim();
+  botReply._ok = () => { botReply._miss = 0 };
   const places = DB.get('places');
   if(places.length === 0){ botSay('ตอนนี้ยังไม่มีที่พักในระบบเลยครับ รอแอดมินเพิ่มข้อมูลก่อนนะครับ 🙏'); return }
 
+  /* ขอให้บอทช่วยเลือกแบบถาม-ตอบ */
+  if(/ช่วยเลือก|ช่วยหา|เลือกให้|หาให้หน่อย|แนะนำให้หน่อย|ไม่รู้จะเลือก/.test(t)){
+    startGuide();
+    return;
+  }
   const named    = findPlacesByText(t);
   const wantBook = /จอง|book/.test(t) && !/การจอง|จองของฉัน|ประวัติ|ยกเลิก/.test(t);
   const askPrice = /ราคา|กี่บาท|เท่าไหร่|เท่าไร|แพงไหม|คืนละ/.test(t);
@@ -2093,7 +2461,652 @@ function botReply(raw){
     return;
   }
 
+  botReply._miss = (botReply._miss || 0) + 1;
   botSay('ขอโทษครับ น้องกิตยังไม่แน่ใจว่าหมายถึงอะไร 😅 ลองพิมพ์แบบนี้ได้ครับ:\n• "มีที่พักอะไรบ้าง" / "แนะนำหน่อย"\n• "ที่พักริมน้ำ" "วิวเขา" "ฟรีหมูกระทะ"\n• "งบไม่เกิน 800" / "อันไหนถูกสุด"\n• "ทะเลน้อยราคาเท่าไหร่" / "จองนาโปแก"');
+  /* ไม่เข้าใจติดกัน 2 ครั้ง → เสนอเรียกเจ้าหน้าที่ */
+  if(botReply._miss >= 2){
+    botReply._miss = 0;
+    botSay('ดูเหมือนน้องกิตจะช่วยไม่ถูกจุดครับ 🙏 กดปุ่ม "🙋 คุยกับเจ้าหน้าที่" ด้านล่าง เดี๋ยวทีมงานตัวจริงมาช่วยดูให้ครับ');
+  }
+  return;
+}
+
+/* ============================================================
+   🐣 MASCOT — แอบโผล่ / หลับ / ฉลอง   (ปิดได้ในเมนู)
+   ============================================================ */
+const TOON_KEY = 'toon_on';
+function toonEnabled(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  return localStorage.getItem(TOON_KEY) !== '0';
+}
+function renderToonBtn(){
+  const b = document.getElementById('btn-toon');
+  if(b) b.textContent = toonEnabled() ? '🐣 ตัวการ์ตูน: เปิด' : '🐣 ตัวการ์ตูน: ปิด';
+}
+function toggleToon(){
+  localStorage.setItem(TOON_KEY, toonEnabled() ? '0' : '1');
+  renderToonBtn();
+  if(!toonEnabled()){
+    const p = document.getElementById('peek');
+    if(p) p.classList.remove('up','talk');
+    wakeUp();
+  }
+  botSay(toonEnabled() ? 'เปิดตัวการ์ตูนแล้วครับ 🐣' : 'ปิดตัวการ์ตูนเรียบร้อยครับ หน้าจอจะนิ่งๆ แล้ว 😌');
+}
+
+const PEEK_TIPS = [
+  'ทะเลบัวแดงที่ทะเลน้อยบานสวยสุดช่วงเดือน ก.พ. ครับ 🌺',
+  'ยอยักษ์ปากประ ต้องไปตอนตี 5 ถึงจะทันพระอาทิตย์ขึ้นครับ 🌅',
+  'เขาอกทะลุอยู่กลางเมืองเลย เดินขึ้นไปชมวิว 360 องศาได้ครับ ⛰️',
+  'แหลมจองถนนมีโลมาอิรวดี หายากมากนะครับ 🐬',
+  'พิมพ์ "ช่วยเลือกให้หน่อย" เดี๋ยวผมถามทีละข้อให้ครับ 🧭',
+  'กดปุ่มไมค์ 🎤 พูดกับผมได้เลยนะครับ ไม่ต้องพิมพ์',
+];
+let peekTimer = null;
+
+function anyModalOpen(){
+  return [...document.querySelectorAll('.overlay')].some(o => o.classList.contains('open'));
+}
+function peekOut(){
+  if(!toonEnabled() || anyModalOpen()) return;
+  const p = document.getElementById('peek');
+  if(!p) return;
+  p.classList.add('up');
+  setTimeout(() => p.classList.remove('up', 'talk'), 3200);
+}
+function peekTalk(){
+  const p = document.getElementById('peek');
+  if(!p) return;
+  document.getElementById('peek-bubble').textContent =
+    PEEK_TIPS[Math.floor(Math.random() * PEEK_TIPS.length)];
+  p.classList.add('talk');
+  setTimeout(() => { p.classList.remove('talk'); p.classList.remove('up') }, 3400);
+}
+function schedulePeek(){
+  clearTimeout(peekTimer);
+  peekTimer = setTimeout(() => { peekOut(); schedulePeek() }, 45000 + Math.random() * 45000);
+}
+
+/* ---------- 😴 หลับเมื่อไม่มีคนใช้ ---------- */
+let idleTimer = null, sleeping = false;
+function goSleep(){
+  if(!toonEnabled() || sleeping) return;
+  sleeping = true;
+  document.body.classList.add('sleeping');
+  const av = document.getElementById('bot-avatar');
+  if(av && !av.querySelector('.zzz')){
+    const z = document.createElement('span');
+    z.className = 'zzz';
+    z.textContent = 'z';
+    z.style.cssText = 'right:-6px;top:-4px;font-size:15px';
+    av.appendChild(z);
+  }
+}
+function wakeUp(){
+  if(sleeping){
+    sleeping = false;
+    document.body.classList.remove('sleeping');
+    const z = document.querySelector('.zzz');
+    if(z) z.remove();
+  }
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(goSleep, 60000);
+}
+
+/* ---------- 🎉 ฉลองตอนจองสำเร็จ ---------- */
+function celebrate(){
+  if(!toonEnabled()) return;
+  const box = document.getElementById('celebrate');
+  if(!box) return;
+  box.innerHTML = '';
+  box.classList.add('on');
+
+  const colors = ['#3a9d6e','#e8a13d','#5cbb8b','#ffd166','#7cc79b','#ff8fc0'];
+  for(let i = 0; i < 40; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.top = '-20px';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = (1.8 + Math.random() * 1.6) + 's';
+    c.style.animationDelay = (Math.random() * .5) + 's';
+    box.appendChild(c);
+  }
+  /* มาสคอต 3 ตัววิ่งข้ามจอ */
+  ['#3a9d6e','#2e7d54','#e8a13d'].forEach((col, i) => {
+    const d = document.createElement('div');
+    d.className = 'cheer-run';
+    d.style.animationDelay = (i * .22) + 's';
+    d.innerHTML = `<svg viewBox="0 0 130 170"><g>
+      <circle cx="65" cy="56" r="38" fill="${col}"/>
+      <circle cx="52" cy="53" r="11" fill="#fdfffd"/><circle cx="52" cy="53" r="5" fill="#22352b"/>
+      <circle cx="78" cy="53" r="11" fill="#fdfffd"/><circle cx="78" cy="53" r="5" fill="#22352b"/>
+      <path d="M54 74 Q65 86 76 74" stroke="#123526" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <rect x="30" y="92" width="70" height="60" rx="24" fill="${col}"/>
+      <rect x="14" y="78" width="14" height="42" rx="7" fill="${col}" transform="rotate(-35 21 99)"/>
+      <rect x="102" y="78" width="14" height="42" rx="7" fill="${col}" transform="rotate(35 109 99)"/>
+    </g></svg>`;
+    box.appendChild(d);
+  });
+  setTimeout(() => { box.classList.remove('on'); box.innerHTML = '' }, 3600);
+}
+
+/* ============================================================
+   🗓️ ปฏิทินห้องว่าง / 🖼️ แกลเลอรี / 🌤️ อากาศ / 🗺️ นำทาง
+   ============================================================ */
+function renderCalendar(placeId, offset){
+  const box = document.getElementById('d-cal');
+  if(!box) return;
+  renderCalendar._off = offset != null ? offset : (renderCalendar._off || 0);
+  const off = renderCalendar._off;
+  const now = new Date();
+  const d0 = new Date(now.getFullYear(), now.getMonth() + off, 1);
+  const y = d0.getFullYear(), m = d0.getMonth();
+  const days = new Date(y, m + 1, 0).getDate();
+  const first = d0.getDay();
+  const today = todayStr();
+
+  const busy = new Set();
+  DB.get('bookings').filter(b => b && Number(b.placeId) === Number(placeId) && statusOf(b) !== 'rejected')
+    .forEach(b => {
+      let cur = new Date(b.checkin + 'T00:00:00');
+      const end = new Date(b.checkout + 'T00:00:00');
+      while(cur < end){
+        busy.add(`${cur.getFullYear()}-${String(cur.getMonth()+1).padStart(2,'0')}-${String(cur.getDate()).padStart(2,'0')}`);
+        cur.setDate(cur.getDate() + 1);
+      }
+    });
+
+  let cells = '';
+  ['อา','จ','อ','พ','พฤ','ศ','ส'].forEach(d => cells += `<div class="dow">${d}</div>`);
+  for(let i = 0; i < first; i++) cells += `<div class="cal-day empty"></div>`;
+  for(let d = 1; d <= days; d++){
+    const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const cls = iso < today ? 'past' : (busy.has(iso) ? 'busy' : '');
+    cells += `<div class="cal-day ${cls}">${d}</div>`;
+  }
+  box.innerHTML = `
+    <div class="cal-head">
+      <button class="cal-nav" onclick="renderCalendar(${placeId}, ${off - 1})">‹</button>
+      <b>${TH_MONTHS[m]} ${y}</b>
+      <button class="cal-nav" onclick="renderCalendar(${placeId}, ${off + 1})">›</button>
+    </div>
+    <div class="cal-grid">${cells}</div>
+    <div class="cal-legend">
+      <span><i style="background:#dff0e6"></i>ว่าง</span>
+      <span><i style="background:#fbe9e5"></i>ถูกจองแล้ว</span>
+      <span><i style="background:#f1f4f2"></i>ผ่านมาแล้ว</span>
+    </div>`;
+}
+
+/* รูปทั้งหมดของที่พัก (รูปหลัก + รูปเพิ่มเติม) */
+function placeImages(p){
+  const list = [p.img_url || FALLBACK_IMG];
+  (p.images || []).forEach(u => { if(u && !list.includes(u)) list.push(u) });
+  return list;
+}
+function renderGallery(p){
+  const box = document.getElementById('d-thumbs');
+  const main = document.getElementById('d-img');
+  if(!box || !main) return;
+  const imgs = placeImages(p);
+  if(imgs.length < 2){ box.innerHTML = ''; return }
+  box.innerHTML = imgs.map((u, i) =>
+    `<img src="${esc(u)}" class="${i === 0 ? 'on' : ''}" alt="รูป ${i+1}"
+       onerror="this.style.display='none'"
+       onclick="document.getElementById('d-img').src=this.src;
+                [...this.parentNode.children].forEach(x=>x.classList.remove('on'));
+                this.classList.add('on')">`).join('');
+}
+
+/* พยากรณ์อากาศจริงจาก Open-Meteo (ฟรี ไม่ต้องมี API key) */
+const WX = {0:['☀️','แดดจัด'],1:['🌤️','แดดบางส่วน'],2:['⛅','มีเมฆบางส่วน'],3:['☁️','เมฆมาก'],
+  45:['🌫️','หมอกลง'],48:['🌫️','หมอกลง'],51:['🌦️','ฝนปรอยๆ'],53:['🌦️','ฝนปรอยๆ'],55:['🌦️','ฝนปรอย'],
+  61:['🌧️','ฝนตกเล็กน้อย'],63:['🌧️','ฝนตก'],65:['🌧️','ฝนตกหนัก'],80:['🌦️','ฝนไล่ช้าง'],
+  81:['🌧️','ฝนตกเป็นช่วง'],82:['⛈️','ฝนตกหนักมาก'],95:['⛈️','พายุฝนฟ้าคะนอง'],96:['⛈️','พายุฝน']};
+
+function loadWeather(p){
+  const box = document.getElementById('d-weather');
+  if(!box) return;
+  const m = String(p.map_url || '').match(/marker=([\d.]+)%2C([\d.]+)/);
+  if(!m){ box.style.display = 'none'; return }
+  const [ , lat, lng] = m;
+  box.style.display = 'flex';
+  box.innerHTML = `<div class="wx-ic">🌡️</div><div><div class="wx-d">กำลังโหลดสภาพอากาศ…</div></div>`;
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=precipitation_probability_max&timezone=Asia%2FBangkok&forecast_days=1`)
+    .then(r => r.json())
+    .then(d => {
+      const c = d.current || {};
+      const w = WX[c.weather_code] || ['🌡️','สภาพอากาศทั่วไป'];
+      const rain = (d.daily && d.daily.precipitation_probability_max) ? d.daily.precipitation_probability_max[0] : null;
+      box.innerHTML = `
+        <div class="wx-ic">${w[0]}</div>
+        <div>
+          <div class="wx-t">${Math.round(c.temperature_2m)}°C</div>
+          <div class="wx-d">${w[1]}${rain != null ? ` · โอกาสฝน ${rain}%` : ''}${rain >= 60 ? ' ☔ พกร่มไปด้วยนะครับ' : ''}</div>
+        </div>`;
+    })
+    .catch(() => { box.style.display = 'none' });
+}
+
+/* ============================================================
+   VOICE INPUT — พูดแทนพิมพ์ (Web Speech Recognition)
+   ============================================================ */
+let recog = null, recording = false;
+
+function toggleMic(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){
+    botSay('ขอโทษครับ เบราว์เซอร์นี้ยังไม่รองรับการพูด 🎤 ลองใช้ Chrome หรือ Edge ดูนะครับ');
+    return;
+  }
+  const btn = document.getElementById('btn-mic');
+  if(recording){ try{ recog.stop() }catch(e){} return }
+
+  recog = new SR();
+  recog.lang = 'th-TH';
+  recog.interimResults = true;
+  recog.continuous = false;
+
+  recog.onstart = () => {
+    recording = true;
+    btn.classList.add('rec');
+    btn.textContent = '⏹️';
+    showLiveBanner('🎤 กำลังฟัง... พูดได้เลยครับ');
+  };
+  recog.onresult = ev => {
+    let txt = '';
+    for(let i = ev.resultIndex; i < ev.results.length; i++) txt += ev.results[i][0].transcript;
+    document.getElementById('chat-input').value = txt;
+    if(ev.results[ev.results.length - 1].isFinal){
+      setTimeout(() => { if(document.getElementById('chat-input').value.trim()) sendMsg() }, 250);
+    }
+  };
+  recog.onerror = e => {
+    botSay(e.error === 'not-allowed'
+      ? 'ไม่ได้รับอนุญาตให้ใช้ไมโครโฟนครับ 🎤 กรุณากดอนุญาตในเบราว์เซอร์แล้วลองใหม่'
+      : 'ฟังไม่ชัดครับ 😅 ลองพูดอีกครั้งหรือพิมพ์แทนก็ได้ครับ');
+  };
+  recog.onend = () => {
+    recording = false;
+    btn.classList.remove('rec');
+    btn.textContent = '🎤';
+  };
+  try{ recog.start() }catch(e){}
+}
+
+/* ============================================================
+   GUIDED FLOW — บอทถามกลับเป็นขั้นตอน
+   ============================================================ */
+let guide = null;   /* { step, guests, budget, style } */
+
+const GUIDE_STEPS = [
+  { key:'guests', q:'ไปกันกี่คนครับ? 😊',
+    opts:[['1-2 คน','2'],['3-4 คน','4'],['5 คนขึ้นไป','6']] },
+  { key:'budget', q:'งบต่อคืนประมาณเท่าไหร่ครับ? 💸',
+    opts:[['ไม่เกิน 700','700'],['700-1,200','1200'],['1,200 ขึ้นไป','99999'],['เท่าไหร่ก็ได้','0']] },
+  { key:'style',  q:'ชอบบรรยากาศแบบไหนครับ? 🌿',
+    opts:[['🌊 ริมน้ำ','ริมน้ำ'],['⛰️ วิวเขา','เขา'],['🌾 ทุ่งนา','ทุ่งนา'],['🍖 ฟรีหมูกระทะ','หมูกระทะ']] },
+];
+
+function showGuideChips(opts){
+  const wrap = document.createElement('div');
+  wrap.className = 'guide-chips';
+  opts.forEach(([label, val]) => {
+    const b = document.createElement('button');
+    b.textContent = label;
+    b.onclick = () => {
+      wrap.querySelectorAll('button').forEach(x => x.disabled = true);
+      guideAnswer(val, label);
+    };
+    wrap.appendChild(b);
+  });
+  chatBody.appendChild(wrap);
+  scrollChat();
+}
+
+function startGuide(){
+  guide = { step:0 };
+  botSay('ได้เลยครับ! ขอถามไม่กี่ข้อ เดี๋ยวน้องกัปตันคัดที่พักที่ใช่ที่สุดให้ 🧭');
+  askGuide();
+}
+function askGuide(){
+  const s = GUIDE_STEPS[guide.step];
+  botSay(s.q);
+  showGuideChips(s.opts);
+}
+function guideAnswer(val, label){
+  if(!guide) return;
+  userSay(label);
+  guide[GUIDE_STEPS[guide.step].key] = val;
+  guide.step++;
+  if(guide.step < GUIDE_STEPS.length){
+    showTyping();
+    setTimeout(() => { hideTyping(); askGuide() }, 500);
+    return;
+  }
+  showTyping();
+  setTimeout(() => { hideTyping(); finishGuide() }, 700);
+}
+function finishGuide(){
+  const places = DB.get('places');
+  const budget = Number(guide.budget) || 0;
+  const style  = guide.style || '';
+
+  let found = places.filter(p => budget === 0 || Number(p.price) <= budget);
+  const styled = found.filter(p => {
+    const hay = ((p.name||'') + ' ' + (p.tags||[]).join(' ') + ' ' + (p.desc||'')).toLowerCase();
+    return hay.includes(style);
+  });
+  if(styled.length) found = styled;
+  found = found.sort((a,b) => a.price - b.price);
+
+  const g = guide; guide = null;
+  if(!found.length){
+    botSay('ขอโทษครับ ยังไม่เจอที่พักที่ตรงเงื่อนไขเป๊ะๆ 😅 ขอเสนอทั้งหมดให้เลือกแทนนะครับ');
+    showCarousel(places);
+    return;
+  }
+  botSay(`สรุปที่คุณต้องการ: ${g.guests} คน · งบ${budget ? 'ไม่เกิน ' + Number(budget).toLocaleString() : 'ไม่จำกัด'} · แนว${style || 'ไหนก็ได้'}\nน้องกัปตันคัดมาให้ ${found.length} แห่งครับ 👇 อันดับแรกคือตัวที่คุ้มที่สุด`);
+  showCarousel(found);
+  selectPlace(found[0].id);
+}
+
+/* ============================================================
+   LIVE CHAT — เก็บบทสนทนา / แอดมินคุยแทนบอท
+   ============================================================ */
+const renderedMsgIds = new Set();   /* กันข้อความซ้ำเมื่อ realtime ส่งกลับมา */
+
+function newMsgId(){ return Date.now() + '-' + Math.random().toString(36).slice(2,7) }
+
+/* บันทึกข้อความลงฐานข้อมูล (เก็บทั้งของผู้ใช้ บอท และเจ้าหน้าที่) */
+function saveMsg(user, role, text){
+  if(!user) return null;
+  const msg = { id: newMsgId(), user, role, text, ts: Date.now() };
+  renderedMsgIds.add(msg.id);
+  DB.add('chats', msg);
+  return msg;
+}
+
+/* ผู้ใช้คนนี้กำลังให้เจ้าหน้าที่ดูแลอยู่ไหม */
+function isLiveChat(username){
+  const u = DB.get('users').find(x => x && x.username === username);
+  return !!(u && u.liveChat);
+}
+
+/* วาดฟองข้อความของเจ้าหน้าที่ในหน้าผู้ใช้ */
+function adminSay(text){
+  const div = document.createElement('div');
+  div.className = 'msg admin';
+  div.innerHTML = `<span class="who">👤 เจ้าหน้าที่</span><div class="bubble">${esc(text)}</div>`;
+  chatBody.appendChild(div);
+  scrollChat();
+}
+function showLiveBanner(text){
+  const d = document.createElement('div');
+  d.className = 'live-banner';
+  d.textContent = text;
+  chatBody.appendChild(d);
+  scrollChat();
+}
+
+/* ผู้ใช้กดขอคุยกับเจ้าหน้าที่ */
+function requestHuman(){
+  const me = currentUser();
+  if(!me){ goLoginPage(); return }
+  const users = DB.get('users');
+  const idx = users.findIndex(u => u && u.username === me.username);
+  if(idx < 0) return;
+  if(users[idx].liveChat){
+    showLiveBanner('เจ้าหน้าที่กำลังดูแลคุณอยู่แล้วครับ 👤');
+    return;
+  }
+  users[idx].liveChat = true;
+  DB.setIndex('users', idx, users[idx]);
+  saveMsg(me.username, 'user', '[ขอคุยกับเจ้าหน้าที่]');
+  showLiveBanner('ส่งคำขอถึงเจ้าหน้าที่แล้ว 🙋 กรุณารอสักครู่ครับ');
+  botSay('แจ้งเจ้าหน้าที่ให้แล้วครับ 🙏 ระหว่างรอ พิมพ์คำถามทิ้งไว้ได้เลย เจ้าหน้าที่จะเห็นข้อความทั้งหมดครับ');
+}
+
+/* รับข้อความใหม่จากเจ้าหน้าที่แบบเรียลไทม์ */
+function syncMyChat(){
+  const me = currentUser();
+  if(!me) return;
+  DB.get('chats')
+    .filter(m => m && m.user === me.username && m.role === 'admin' && !renderedMsgIds.has(m.id))
+    .sort((a,b) => a.ts - b.ts)
+    .forEach(m => {
+      renderedMsgIds.add(m.id);
+      adminSay(m.text);
+      if(soundEnabled()) playChime();
+    });
+}
+
+/* ---------- ฝั่งแอดมิน ---------- */
+let chatViewUser = null;
+
+function chatUserList(){
+  const map = {};
+  DB.get('chats').forEach(m => {
+    if(!m || !m.user) return;
+    if(!map[m.user] || m.ts > map[m.user].ts) map[m.user] = m;
+  });
+  return Object.keys(map)
+    .map(u => ({ user: u, last: map[u] }))
+    .sort((a,b) => b.last.ts - a.last.ts);
+}
+
+function renderChatUsers(){
+  const box = document.getElementById('chat-users');
+  if(!box) return;
+  const list = chatUserList();
+  const seen = Number(localStorage.getItem('adminSeenChat') || 0);
+  box.innerHTML = list.length === 0
+    ? `<div class="hint">ยังไม่มีผู้ใช้คนไหนเริ่มแชท</div>`
+    : list.map(x => {
+        const unread = DB.get('chats').filter(m =>
+          m && m.user === x.user && m.role === 'user' && m.ts > seen).length;
+        const live = isLiveChat(x.user);
+        return `<div class="cu-item ${chatViewUser === x.user ? 'on' : ''}" onclick="openUserChat('${esc(x.user)}')">
+            ${unread ? `<span class="cu-badge">${unread}</span>` : ''}
+            <div class="cu-name">${live ? '👤 ' : ''}${esc(x.user)}</div>
+            <div class="cu-last">${esc(String(x.last.text).slice(0, 26))}</div>
+          </div>`;
+      }).join('');
+  updateChatBadge();
+}
+
+function openUserChat(username){
+  chatViewUser = username;
+  document.getElementById('ac-title').textContent = '💬 บทสนทนากับ @' + username;
+  renderChatUsers();
+  renderChatLog();
+  updateHandoffSwitch();
+  localStorage.setItem('adminSeenChat', String(Date.now()));
+  renderBell();
+}
+
+function renderChatLog(){
+  const log = document.getElementById('ac-log');
+  if(!log) return;
+  if(!chatViewUser){ log.innerHTML = `<div class="stat-empty">เลือกผู้ใช้จากรายการด้านบน</div>`; return }
+  const msgs = DB.get('chats').filter(m => m && m.user === chatViewUser).sort((a,b) => a.ts - b.ts);
+  log.innerHTML = msgs.length === 0
+    ? `<div class="stat-empty">ยังไม่มีข้อความ</div>`
+    : msgs.map(m => {
+        const cls = m.role === 'user' ? 'u' : (m.role === 'admin' ? 'a' : 'b');
+        const who = m.role === 'user' ? '' : (m.role === 'admin' ? 'เจ้าหน้าที่' : 'บอท');
+        const t = new Date(m.ts);
+        const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+        return `<div class="ac-msg ${cls}">${esc(m.text)}<small>${who ? who + ' · ' : ''}${hh}</small></div>`;
+      }).join('');
+  log.scrollTop = log.scrollHeight;
+}
+
+function updateHandoffSwitch(){
+  const sw = document.getElementById('ac-switch');
+  if(!sw) return;
+  if(!chatViewUser){ sw.textContent = '🤖 บอทตอบอยู่'; sw.classList.remove('on'); return }
+  const on = isLiveChat(chatViewUser);
+  sw.textContent = on ? '👤 คุณกำลังคุยแทนบอท' : '🤖 บอทตอบอยู่ (กดเพื่อเข้าคุยเอง)';
+  sw.classList.toggle('on', on);
+}
+
+function toggleHandoff(){
+  if(!chatViewUser){ alert('กรุณาเลือกผู้ใช้ก่อน'); return }
+  const users = DB.get('users');
+  const idx = users.findIndex(u => u && u.username === chatViewUser);
+  if(idx < 0) return;
+  const on = !users[idx].liveChat;
+  users[idx].liveChat = on;
+  DB.setIndex('users', idx, users[idx]);
+  saveMsg(chatViewUser, 'admin', on
+    ? 'เจ้าหน้าที่เข้าร่วมการสนทนาแล้วครับ 👤 มีอะไรให้ช่วยบอกได้เลยครับ'
+    : 'เจ้าหน้าที่ส่งคุณกลับให้น้องกัปตันดูแลต่อแล้วครับ 🤖 ขอบคุณที่ใช้บริการครับ');
+  updateHandoffSwitch();
+  renderChatUsers();
+  renderChatLog();
+}
+
+function adminSendChat(){
+  const inp = document.getElementById('ac-text');
+  const text = inp.value.trim();
+  if(!text){ return }
+  if(!chatViewUser){ alert('กรุณาเลือกผู้ใช้ก่อน'); return }
+  inp.value = '';
+  saveMsg(chatViewUser, 'admin', text);
+  renderChatLog();
+  renderChatUsers();
+}
+
+function updateChatBadge(){
+  const el = document.getElementById('chat-badge');
+  if(!el) return;
+  const seen = Number(localStorage.getItem('adminSeenChat') || 0);
+  const n = DB.get('chats').filter(m => m && m.role === 'user' && m.ts > seen).length;
+  el.textContent = n;
+  el.style.display = n > 0 ? 'inline-flex' : 'none';
+}
+
+/* ============================================================
+   NOTIFICATIONS — กระดิ่งแจ้งเตือน
+   ============================================================ */
+function timeAgo(ts){
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if(s < 60) return 'เมื่อสักครู่';
+  if(s < 3600) return Math.floor(s/60) + ' นาทีที่แล้ว';
+  if(s < 86400) return Math.floor(s/3600) + ' ชั่วโมงที่แล้ว';
+  return Math.floor(s/86400) + ' วันที่แล้ว';
+}
+
+function myNotifs(){
+  const me = currentUser();
+  if(!me) return [];
+  const seen = Number(localStorage.getItem('seenNotif_' + me.username) || 0);
+  const out = [];
+
+  if(me.role === 'admin'){
+    /* แอดมิน: ข้อความใหม่จากผู้ใช้ + การจองที่รอยืนยัน */
+    DB.get('chats').filter(m => m && m.role === 'user' && m.ts > seen).forEach(m =>
+      out.push({ ic:'💬', text:`@${m.user}: ${String(m.text).slice(0,40)}`, ts:m.ts, go:'chat', user:m.user }));
+    DB.get('bookings').filter(b => b && (b.status || 'pending') === 'pending' && Number(b.id) > seen).forEach(b =>
+      out.push({ ic:'📋', text:`การจองใหม่รอยืนยัน: ${b.placeName} (@${b.username})`, ts:Number(b.id), go:'booking' }));
+  }else{
+    /* ผู้ใช้: ข้อความจากเจ้าหน้าที่ + สถานะการจองเปลี่ยน */
+    DB.get('chats').filter(m => m && m.user === me.username && m.role === 'admin' && m.ts > seen).forEach(m =>
+      out.push({ ic:'👤', text:`เจ้าหน้าที่: ${String(m.text).slice(0,40)}`, ts:m.ts, go:'chat' }));
+    DB.get('bookings').filter(b => b && b.username === me.username && b.statusAt && b.statusAt > seen).forEach(b =>
+      out.push({ ic: b.status === 'confirmed' ? '✅' : (b.status === 'rejected' ? '❌' : '🏁'),
+                 text:`${b.placeName}: ${statusLabel(b.status)}`, ts:b.statusAt, go:'profile' }));
+  }
+  return out.sort((a,b) => b.ts - a.ts).slice(0, 20);
+}
+
+function renderBell(){
+  const dot = document.getElementById('bell-dot');
+  if(!dot) return;
+  const n = myNotifs().length;
+  dot.textContent = n > 9 ? '9+' : n;
+  dot.classList.toggle('show', n > 0);
+  updateChatBadge();
+}
+
+function toggleNotifs(){
+  const p = document.getElementById('notif-panel');
+  const opening = !p.classList.contains('open');
+  p.classList.toggle('open', opening);
+  if(!opening) return;
+
+  const list = myNotifs();
+  document.getElementById('notif-list').innerHTML = list.length === 0
+    ? `<div class="notif-empty">ยังไม่มีการแจ้งเตือนใหม่ 🌿</div>`
+    : list.map(n => `<div class="notif-item" onclick="gotoNotif('${n.go}','${esc(n.user || '')}')">
+        <span class="ni-ic">${n.ic}</span>
+        <div><div class="ni-txt">${esc(n.text)}</div><div class="ni-time">${timeAgo(n.ts)}</div></div>
+      </div>`).join('');
+}
+
+function gotoNotif(go, user){
+  document.getElementById('notif-panel').classList.remove('open');
+  const me = currentUser();
+  markAllRead();
+  if(go === 'profile'){ openProfile(); return }
+  if(me && me.role === 'admin' && (go === 'chat' || go === 'booking')){
+    openAdmin();
+    switchTab(go === 'chat' ? 'chats' : 'bookings');
+    if(go === 'chat' && user) openUserChat(user);
+  }
+}
+
+function markAllRead(){
+  const me = currentUser();
+  if(!me) return;
+  localStorage.setItem('seenNotif_' + me.username, String(Date.now()));
+  if(me.role === 'admin') localStorage.setItem('adminSeenChat', String(Date.now()));
+  renderBell();
+  const p = document.getElementById('notif-panel');
+  if(p.classList.contains('open')) document.getElementById('notif-list').innerHTML =
+    `<div class="notif-empty">อ่านทั้งหมดแล้ว ✅</div>`;
+}
+
+/* ============================================================
+   BOOKING STATUS — รอยืนยัน / ยืนยันแล้ว / เข้าพักแล้ว / ปฏิเสธ
+   ============================================================ */
+const STATUS = {
+  pending:   { label:'รอยืนยัน',   cls:'st-pending',   ic:'⏳' },
+  confirmed: { label:'ยืนยันแล้ว', cls:'st-confirmed', ic:'✅' },
+  done:      { label:'เข้าพักแล้ว', cls:'st-done',      ic:'🏁' },
+  rejected:  { label:'ถูกปฏิเสธ',  cls:'st-rejected',  ic:'❌' },
+};
+function statusOf(b){ return (b && b.status) || 'pending' }
+function statusLabel(s){ return (STATUS[s] || STATUS.pending).label }
+function statusPill(s){
+  const st = STATUS[s] || STATUS.pending;
+  return `<span class="role-pill ${st.cls}">${st.ic} ${st.label}</span>`;
+}
+
+/* แอดมินเปลี่ยนสถานะ */
+function adminSetStatus(id, status){
+  const me = currentUser();
+  if(!me || me.role !== 'admin'){ alert('เฉพาะผู้ดูแลระบบเท่านั้น'); return }
+  const list = DB.get('bookings');
+  const b = list.find(x => x && String(x.id) === String(id));
+  if(!b) return;
+  b.status = status;
+  b.statusAt = Date.now();
+
+  if(USE_FIREBASE && fdb && b._key){
+    fdb.ref('bookings/' + b._key).update({ status: status, statusAt: b.statusAt });
+  }else{
+    DB.set('bookings', list);
+  }
+  /* แจ้งผู้ใช้ผ่านแชทด้วย */
+  saveMsg(b.username, 'admin',
+    `อัปเดตการจอง "${b.placeName}" (${fmtDate(b.checkin)}) → ${statusLabel(status)} ครับ`);
+  renderAdminBookings();
+  renderAdminStats();
+  refreshBookingButtons();
+  renderBell();
 }
 
 /* ============================================================
@@ -2167,6 +3180,21 @@ function selectPlace(id){
   paintBookBtn(dBtn, p.id);
 
   renderMap(p.map_url);
+
+  renderGallery(p);
+  renderCalendar(p.id, 0);
+  loadWeather(p);
+
+  /* ปุ่มนำทาง → เปิด Google Maps จากตำแหน่งปัจจุบัน */
+  const nav = document.getElementById('d-nav');
+  const mm = String(p.map_url || '').match(/marker=([\d.]+)%2C([\d.]+)/);
+  if(nav){
+    if(mm){
+      nav.style.display = '';
+      nav.onclick = () => window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${mm[1]},${mm[2]}&travelmode=driving`, '_blank');
+    }else{ nav.style.display = 'none' }
+  }
 
   /* มือถือ: เลือกที่พักแล้วพาไปดูแผนที่+รายละเอียดทันที */
   if(isMobile()) setMobileView('map');
@@ -2274,6 +3302,8 @@ function submitBooking(){
     nights: nights,
     pricePerNight: price,
     total: total,
+    status: 'pending',
+    statusAt: Date.now(),
     createdAt: new Date().toISOString()
   });
 
@@ -2301,6 +3331,9 @@ function openAdmin(){
   renderAdminUsers();
   renderAdminBookings();
   renderAdminStats();
+  renderChatUsers();
+  renderChatLog();
+  updateHandoffSwitch();
   switchTab('places');
   document.getElementById('admin-overlay').classList.add('open');
 }
@@ -2342,7 +3375,7 @@ function previewPlaceImg(){
 }
 
 function clearPlaceForm(){
-  ['np-name','np-price','np-tags','np-img','np-map','np-desc']
+  ['np-name','np-price','np-tags','np-img','np-imgs','np-map','np-desc']
     .forEach(id => document.getElementById(id).value = '');
   previewPlaceImg();
 }
@@ -2357,6 +3390,7 @@ function editPlace(id){
   document.getElementById('np-price').value = p.price || '';
   document.getElementById('np-tags').value  = (p.tags || []).join(', ');
   document.getElementById('np-img').value   = p.img_url || '';
+  document.getElementById('np-imgs').value  = (p.images || []).join(', ');
   document.getElementById('np-map').value   = p.map_url || '';
   document.getElementById('np-desc').value  = p.desc || '';
   previewPlaceImg();
@@ -2386,6 +3420,7 @@ function adminSavePlace(){
   const tags  = document.getElementById('np-tags').value.split(',').map(s => s.trim()).filter(Boolean);
   const img   = document.getElementById('np-img').value.trim();
   const map   = document.getElementById('np-map').value.trim();
+  const imgs  = document.getElementById('np-imgs').value.split(',').map(s => s.trim()).filter(Boolean);
   const desc  = document.getElementById('np-desc').value.trim();
 
   if(!name || !price || price <= 0){
@@ -2404,6 +3439,7 @@ function adminSavePlace(){
       tags: tags.length ? tags : (places[idx].tags || ['ที่พัก']),
       desc: desc || places[idx].desc || 'ที่พักบรรยากาศดีในจังหวัดพัทลุง',
       img_url: img || places[idx].img_url || FALLBACK_IMG,
+      images: imgs.length ? imgs : (places[idx].images || []),
       map_url: map || places[idx].map_url || DEFAULT_MAP,
     });
     DB.setIndex('places', idx, updated);   /* เขียนเฉพาะรายการนี้ id เดิมไม่เปลี่ยน การจองเก่าไม่หลุด */
@@ -2426,6 +3462,7 @@ function adminSavePlace(){
     tags: tags.length ? tags : ['ที่พักใหม่'],
     desc: desc || 'ที่พักบรรยากาศดีในจังหวัดพัทลุง',
     img_url: img || FALLBACK_IMG,
+    images: imgs,
     map_url: map || DEFAULT_MAP,
   });
   DB.set('places', places);
@@ -2437,6 +3474,25 @@ function adminSavePlace(){
 
 /* คงชื่อเดิมไว้เผื่อมีการเรียกจากที่อื่น */
 function adminAddPlace(){ adminSavePlace() }
+
+/* โหลดที่พักชุดมาตรฐาน 20 แห่งทับของเดิม (แอดมินเท่านั้น) */
+function adminResetPlaces(){
+  const me = currentUser();
+  if(!me || me.role !== 'admin'){ alert('เฉพาะผู้ดูแลระบบเท่านั้น'); return }
+  const cur = DB.get('places').length;
+  if(!confirm(
+      'จะแทนที่ข้อมูลที่พักทั้งหมด (ตอนนี้มี ' + cur + ' แห่ง) ด้วยชุดมาตรฐาน 20 แห่ง\n\n' +
+      '⚠️ ที่พักที่เพิ่ม/แก้ไขเองจะหายไป (ข้อมูลผู้ใช้และการจองไม่ถูกลบ)\n\nยืนยันหรือไม่?')) return;
+
+  DB.set('places', defaultPlaces());
+  if(USE_FIREBASE && fdb) fdb.ref('data_version').set(DATA_VERSION);
+  else localStorage.setItem('data_version', DATA_VERSION);
+
+  cancelEditPlace();
+  renderAdminPlaces();
+  renderAdminStats();
+  botSay('โหลดข้อมูลที่พักมาตรฐาน 20 แห่งเรียบร้อยแล้วครับ 🏡 ลองพิมพ์ "ดูที่พักทั้งหมด" ได้เลย');
+}
 
 function adminDelPlace(id){
   if(!confirm('ยืนยันการลบสถานที่พักนี้?')) return;
@@ -2459,14 +3515,14 @@ function renderAdminUsers(){
     : users.map(u => {
       const isMe = me && me.username === u.username;
       const prof = { avatar:u.avatar || '', displayName:u.displayName || u.username,
-                     username:u.username, frame:u.frame || '' };
+                     username:u.username, frame:u.frame || '', role:u.role };
       return `
       <tr>
         <td>
           <div style="display:flex;align-items:center;gap:9px">
             <div class="avatar ${frameCls(prof)}" style="width:34px;height:34px;font-size:15px">${avatarHtml(prof)}</div>
             <div style="min-width:0">
-              <div style="font-weight:600">${esc(prof.displayName)}</div>
+              <div style="font-weight:600">${esc(prof.displayName)}${u.role === 'admin' ? '<span class="admin-tag">ADMIN</span>' : ''}</div>
               <small style="color:var(--ink-soft)">@${esc(u.username)}${isMe ? ' (คุณ)' : ''}</small>
             </div>
           </div>
@@ -2554,7 +3610,7 @@ function renderAdminBookings(){
   const tb = document.getElementById('tb-bookings');
   const bookings = DB.get('bookings');
   tb.innerHTML = bookings.length === 0
-    ? `<tr><td colspan="9" class="empty-row">ยังไม่มีข้อมูลการจอง</td></tr>`
+    ? `<tr><td colspan="10" class="empty-row">ยังไม่มีข้อมูลการจอง</td></tr>`
     : bookings.map((b,i) => `
       <tr>
         <td>${i+1}</td>
@@ -2565,7 +3621,15 @@ function renderAdminBookings(){
         <td>${fmtDate(b.checkout)}</td>
         <td>${Number(b.nights) || nightsBetween(b.checkin, b.checkout)}</td>
         <td><b style="color:var(--green-700)">${bookingTotal(b).toLocaleString()} ฿</b></td>
-        <td><button class="btn danger small" onclick="adminDelBooking(${b.id})">ลบ</button></td>
+        <td>${statusPill(statusOf(b))}</td>
+        <td style="white-space:nowrap">
+          ${statusOf(b) === 'pending' ? `
+            <button class="btn small" onclick="adminSetStatus('${b.id}','confirmed')">✅ ยืนยัน</button>
+            <button class="btn danger small" onclick="adminSetStatus('${b.id}','rejected')">❌ ปฏิเสธ</button>` : ''}
+          ${statusOf(b) === 'confirmed' ? `
+            <button class="btn amber small" onclick="adminSetStatus('${b.id}','done')">🏁 เข้าพักแล้ว</button>` : ''}
+          <button class="btn danger small" onclick="adminDelBooking(${b.id})">ลบ</button>
+        </td>
       </tr>`).join('');
 }
 /* ---------- 4) สถิติภาพรวม ---------- */
@@ -2901,8 +3965,33 @@ window.addEventListener('resize', () => {
 });
 window.addEventListener('orientationchange', () => setTimeout(cacheEyeRects, 300));
 
+/* เริ่มระบบแชทสด + กระดิ่ง */
+whenReady(() => {
+  renderBell();
+  syncMyChat();
+  const me = currentUser();
+  if(me && isLiveChat(me.username)){
+    showLiveBanner('เจ้าหน้าที่กำลังดูแลการสนทนานี้อยู่ 👤');
+  }
+});
+setInterval(() => { if(typeof renderBell === 'function') renderBell() }, 8000);
+
+/* ปิดแผงแจ้งเตือนเมื่อคลิกที่อื่น */
+document.addEventListener('click', e => {
+  const p = document.getElementById('notif-panel');
+  const b = document.getElementById('btn-bell');
+  if(p && p.classList.contains('open') && !p.contains(e.target) && b && !b.contains(e.target)){
+    p.classList.remove('open');
+  }
+});
+
 /* เริ่มระบบมาสคอต + เสียง */
 renderSoundBtn();
+renderToonBtn();
+schedulePeek();
+wakeUp();
+['mousemove','keydown','click','touchstart','scroll'].forEach(ev =>
+  document.addEventListener(ev, wakeUp, { passive:true }));
 cacheEyeRects();
 setTimeout(cacheEyeRects, 400);
 window.addEventListener('load', cacheEyeRects);
@@ -2916,6 +4005,14 @@ if(location.search.indexOf('from=login') !== -1 || sessionStorage.getItem('justL
   }
   setTimeout(tryAutoWelcome, 900);
 }
+
+/* แจ้งให้ทราบว่าทีมงานเห็นบทสนทนาได้ */
+(function privacyNote(){
+  const d = document.createElement('div');
+  d.className = 'privacy-note';
+  d.textContent = 'ℹ️ บทสนทนานี้ถูกบันทึกไว้ และทีมงานสามารถเข้ามาช่วยตอบได้';
+  chatBody.appendChild(d);
+})();
 
 whenReady(() => setTimeout(() => {
   const ps = DB.get('places');
