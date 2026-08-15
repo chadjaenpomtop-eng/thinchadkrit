@@ -56,6 +56,19 @@ h1,h2,h3,h4,.font-display{font-family:'Prompt',sans-serif}
   100%{transform:translateY(-15vh) rotate(360deg)}
 }
 
+/* ---------- กลีบ/ประกายหล่นลงมาเบาๆ (สวนทางกับใบไม้ที่ลอยขึ้น เพิ่มมิติแต่ไม่รก) ---------- */
+.petal{
+  position:fixed;top:-8vh;font-size:20px;opacity:.3;pointer-events:none;user-select:none;
+  animation:fallSway linear infinite;z-index:0;
+}
+@keyframes fallSway{
+  0%  {transform:translate(0,0)      rotate(0deg)}
+  25% {transform:translate(16px,28vh) rotate(80deg)}
+  50% {transform:translate(-14px,56vh) rotate(170deg)}
+  75% {transform:translate(18px,84vh) rotate(260deg)}
+  100%{transform:translate(-8px,116vh) rotate(360deg)}
+}
+
 /* ---------- เลย์เอาต์หลัก ---------- */
 .wrap{
   width:100%;max-width:1020px;
@@ -834,6 +847,21 @@ startIdleTalk();
     s.style.fontSize = (16 + Math.random() * 20) + 'px';
     s.style.animationDuration = (16 + Math.random() * 16) + 's';
     s.style.animationDelay = (-Math.random() * 20) + 's';
+    document.body.appendChild(s);
+  }
+})();
+
+/* กลีบ/ประกายหล่นลงมาเบาๆ แซมกับใบไม้ที่ลอยขึ้น เพิ่มความมีชีวิตชีวานิดหน่อย ไม่ให้รกตา */
+(function makePetals(){
+  const icons = ['🌸','🍂','✨'];
+  for(let i = 0; i < 6; i++){
+    const s = document.createElement('span');
+    s.className = 'petal';
+    s.textContent = icons[i % icons.length];
+    s.style.left = (Math.random() * 96) + 'vw';
+    s.style.fontSize = (14 + Math.random() * 12) + 'px';
+    s.style.animationDuration = (11 + Math.random() * 9) + 's';
+    s.style.animationDelay = (-Math.random() * 18) + 's';
     document.body.appendChild(s);
   }
 })();

@@ -1414,6 +1414,7 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
         <div class="ac-head">
           <b id="ac-title">ยังไม่ได้เลือกผู้ใช้</b>
           <div class="switch-live" id="ac-switch" onclick="toggleHandoff()">🤖 บอทตอบอยู่</div>
+          <button class="btn danger small" id="ac-delete" onclick="adminDeleteConversation()" title="ลบบทสนทนาทั้งหมดกับผู้ใช้คนนี้">🗑️ ลบบทสนทนา</button>
         </div>
         <div class="ac-log" id="ac-log"></div>
         <div class="ac-input">
@@ -1515,6 +1516,17 @@ const DB = {
       return;
     }
     localStorage.setItem(key, JSON.stringify(this.get(key).filter(x => String(x.id) !== String(id))));
+  },
+
+  /* ลบหลายรายการพร้อมกันตามเงื่อนไข predicate (เช่น ลบทุกข้อความของผู้ใช้คนหนึ่ง) */
+  delWhere(key, predicate){
+    if(USE_FIREBASE && fdb){
+      const list = Array.isArray(cache[key]) ? cache[key] : [];
+      list.filter(predicate).forEach(it => { if(it && it._key) fdb.ref(key + '/' + it._key).remove() });
+      cache[key] = list.filter(x => !predicate(x));
+      return;
+    }
+    localStorage.setItem(key, JSON.stringify(this.get(key).filter(x => !predicate(x))));
   },
 
   /* แก้ไขสมาชิกลำดับที่ n ของอาร์เรย์ (เช่น อัปเดตโปรไฟล์คนเดียว ไม่ทับคนอื่น) */
@@ -2840,6 +2852,18 @@ const renderedMsgIds = new Set();   /* กันข้อความซ้ำ�
 
 function newMsgId(){ return Date.now() + '-' + Math.random().toString(36).slice(2,7) }
 
+/* เปรียบเทียบลำดับเวลาของข้อความ 2 ฝั่ง (ผู้ใช้ / แอดมิน) อย่างแม่นยำ
+   ปัญหาเดิม: เรียงตาม m.ts ซึ่งเป็นนาฬิกาของ "เครื่องผู้ส่ง" แต่ละคน
+   ถ้านาฬิกาเครื่องผู้ใช้กับเครื่องแอดมินไม่ตรงกัน (เร็ว/ช้ากว่ากันไม่กี่วินาที)
+   ข้อความจะเรียงสลับมั่วเวลาสองฝั่งคุยตัดกัน
+   ทางแก้: ใช้ _key ของ Firebase push() แทนถ้ามี เพราะคีย์นี้สร้างจากเวลาเซิร์ฟเวอร์
+   (ชดเชยนาฬิกาเหลื่อมด้วย .info/serverTimeOffset) จึงเรียงลำดับได้แม่นยำกว่า
+   ts มาก ไม่ว่าอุปกรณ์ผู้ส่งจะตั้งนาฬิกาไว้อย่างไร */
+function cmpMsgTime(a, b){
+  if(a && b && a._key && b._key && a._key !== b._key) return a._key < b._key ? -1 : 1;
+  return ((a && a.ts) || 0) - ((b && b.ts) || 0);
+}
+
 /* บันทึกข้อความลงฐานข้อมูล (เก็บทั้งของผู้ใช้ บอท และเจ้าหน้าที่) */
 function saveMsg(user, role, text){
   if(!user) return null;
@@ -2895,7 +2919,7 @@ function syncMyChat(){
   if(!me) return;
   DB.get('chats')
     .filter(m => m && m.user === me.username && m.role === 'admin' && !renderedMsgIds.has(m.id))
-    .sort((a,b) => a.ts - b.ts)
+    .sort(cmpMsgTime)
     .forEach(m => {
       renderedMsgIds.add(m.id);
       adminSay(m.text);
@@ -2910,21 +2934,31 @@ function chatUserList(){
   const map = {};
   DB.get('chats').forEach(m => {
     if(!m || !m.user) return;
-    if(!map[m.user] || m.ts > map[m.user].ts) map[m.user] = m;
+    if(!map[m.user] || cmpMsgTime(m, map[m.user]) > 0) map[m.user] = m;
   });
   return Object.keys(map)
     .map(u => ({ user: u, last: map[u] }))
-    .sort((a,b) => b.last.ts - a.last.ts);
+    .sort((a,b) => cmpMsgTime(b.last, a.last));
 }
+
+/* ---------- สถานะ "อ่านแล้ว" ของแชท: แยกเก็บเป็นรายผู้ใช้ ----------
+   เดิมระบบเก็บ "adminSeenChat" เป็นค่าเดียวใช้ร่วมกันทุกบทสนทนา
+   ผลคือแค่เปิดดูแชทของผู้ใช้คนเดียว หรือกดอ่านการแจ้งเตือนอันใดอันหนึ่ง
+   ตัวเลขแจ้งเตือน/ป้ายข้อความยังไม่อ่านของ "ทุกคน" จะหายไปพร้อมกันหมด
+   ทั้งที่แอดมินยังไม่ได้อ่านบทสนทนาของคนอื่นเลย
+   ทางแก้: เก็บเวลาที่อ่านล่าสุดแยกต่อผู้ใช้แต่ละคน */
+function chatSeenKey(username){ return 'chatSeen_' + username }
+function chatSeenAt(username){ return Number(localStorage.getItem(chatSeenKey(username)) || 0) }
+function markChatSeen(username){ localStorage.setItem(chatSeenKey(username), String(Date.now())) }
 
 function renderChatUsers(){
   const box = document.getElementById('chat-users');
   if(!box) return;
   const list = chatUserList();
-  const seen = Number(localStorage.getItem('adminSeenChat') || 0);
   box.innerHTML = list.length === 0
     ? `<div class="hint">ยังไม่มีผู้ใช้คนไหนเริ่มแชท</div>`
     : list.map(x => {
+        const seen = chatSeenAt(x.user);
         const unread = DB.get('chats').filter(m =>
           m && m.user === x.user && m.role === 'user' && m.ts > seen).length;
         const live = isLiveChat(x.user);
@@ -2940,10 +2974,11 @@ function renderChatUsers(){
 function openUserChat(username){
   chatViewUser = username;
   document.getElementById('ac-title').textContent = '💬 บทสนทนากับ @' + username;
+  /* อ่านเฉพาะบทสนทนาของผู้ใช้คนนี้เท่านั้น ไม่กระทบป้ายข้อความยังไม่อ่านของคนอื่น */
+  markChatSeen(username);
   renderChatUsers();
   renderChatLog();
   updateHandoffSwitch();
-  localStorage.setItem('adminSeenChat', String(Date.now()));
   renderBell();
 }
 
@@ -2951,7 +2986,7 @@ function renderChatLog(){
   const log = document.getElementById('ac-log');
   if(!log) return;
   if(!chatViewUser){ log.innerHTML = `<div class="stat-empty">เลือกผู้ใช้จากรายการด้านบน</div>`; return }
-  const msgs = DB.get('chats').filter(m => m && m.user === chatViewUser).sort((a,b) => a.ts - b.ts);
+  const msgs = DB.get('chats').filter(m => m && m.user === chatViewUser).sort(cmpMsgTime);
   log.innerHTML = msgs.length === 0
     ? `<div class="stat-empty">ยังไม่มีข้อความ</div>`
     : msgs.map(m => {
@@ -3000,11 +3035,39 @@ function adminSendChat(){
   renderChatUsers();
 }
 
+/* ลบบทสนทนาทั้งหมดของผู้ใช้ที่กำลังเปิดดูอยู่ */
+function adminDeleteConversation(){
+  const me = currentUser();
+  if(!me || me.role !== 'admin'){ alert('เฉพาะผู้ดูแลระบบเท่านั้น'); return }
+  if(!chatViewUser){ alert('กรุณาเลือกผู้ใช้ก่อน'); return }
+  const username = chatViewUser;
+  if(!confirm(`ลบบทสนทนาทั้งหมดกับ @${username} ใช่หรือไม่?\nข้อความทั้งหมดจะถูกลบถาวรและกู้คืนไม่ได้`)) return;
+
+  DB.delWhere('chats', m => m && m.user === username);
+
+  /* ถ้ากำลังคุยแทนบอทอยู่ ให้ส่งกลับไปให้บอทตอบตามปกติ */
+  const users = DB.get('users');
+  const idx = users.findIndex(u => u && u.username === username);
+  if(idx >= 0 && users[idx].liveChat){
+    users[idx].liveChat = false;
+    DB.setIndex('users', idx, users[idx]);
+  }
+
+  localStorage.removeItem(chatSeenKey(username));
+  chatViewUser = null;
+  document.getElementById('ac-title').textContent = 'ยังไม่ได้เลือกผู้ใช้';
+  renderChatUsers();
+  renderChatLog();
+  updateHandoffSwitch();
+  renderBell();
+}
+
 function updateChatBadge(){
   const el = document.getElementById('chat-badge');
   if(!el) return;
-  const seen = Number(localStorage.getItem('adminSeenChat') || 0);
-  const n = DB.get('chats').filter(m => m && m.role === 'user' && m.ts > seen).length;
+  const n = chatUserList().reduce((sum, x) =>
+    sum + DB.get('chats').filter(m => m && m.user === x.user && m.role === 'user' && m.ts > chatSeenAt(x.user)).length,
+  0);
   el.textContent = n;
   el.style.display = n > 0 ? 'inline-flex' : 'none';
 }
@@ -3020,23 +3083,30 @@ function timeAgo(ts){
   return Math.floor(s/86400) + ' วันที่แล้ว';
 }
 
+/* สถานะ "อ่านแล้ว" ของการแจ้งเตือนเรื่องการจอง แยกออกจากสถานะแชท
+   (สถานะแชทใช้ chatSeenAt/markChatSeen ที่แยกเป็นรายผู้ใช้ด้านบนแล้ว) */
+function bookingSeenKey(username){ return 'bookingSeen_' + username }
+function bookingSeenAt(username){ return Number(localStorage.getItem(bookingSeenKey(username)) || 0) }
+function markBookingSeen(username){ localStorage.setItem(bookingSeenKey(username), String(Date.now())) }
+
 function myNotifs(){
   const me = currentUser();
   if(!me) return [];
-  const seen = Number(localStorage.getItem('seenNotif_' + me.username) || 0);
   const out = [];
 
   if(me.role === 'admin'){
-    /* แอดมิน: ข้อความใหม่จากผู้ใช้ + การจองที่รอยืนยัน */
-    DB.get('chats').filter(m => m && m.role === 'user' && m.ts > seen).forEach(m =>
+    /* แอดมิน: ข้อความใหม่จากผู้ใช้ (เช็คตามเวลาที่อ่านของแต่ละคน) + การจองที่รอยืนยัน */
+    DB.get('chats').filter(m => m && m.role === 'user' && m.ts > chatSeenAt(m.user)).forEach(m =>
       out.push({ ic:'💬', text:`@${m.user}: ${String(m.text).slice(0,40)}`, ts:m.ts, go:'chat', user:m.user }));
-    DB.get('bookings').filter(b => b && (b.status || 'pending') === 'pending' && Number(b.id) > seen).forEach(b =>
+    const seenB = bookingSeenAt(me.username);
+    DB.get('bookings').filter(b => b && (b.status || 'pending') === 'pending' && Number(b.id) > seenB).forEach(b =>
       out.push({ ic:'📋', text:`การจองใหม่รอยืนยัน: ${b.placeName} (@${b.username})`, ts:Number(b.id), go:'booking' }));
   }else{
     /* ผู้ใช้: ข้อความจากเจ้าหน้าที่ + สถานะการจองเปลี่ยน */
-    DB.get('chats').filter(m => m && m.user === me.username && m.role === 'admin' && m.ts > seen).forEach(m =>
+    DB.get('chats').filter(m => m && m.user === me.username && m.role === 'admin' && m.ts > chatSeenAt(me.username)).forEach(m =>
       out.push({ ic:'👤', text:`เจ้าหน้าที่: ${String(m.text).slice(0,40)}`, ts:m.ts, go:'chat' }));
-    DB.get('bookings').filter(b => b && b.username === me.username && b.statusAt && b.statusAt > seen).forEach(b =>
+    const seenB = bookingSeenAt(me.username);
+    DB.get('bookings').filter(b => b && b.username === me.username && b.statusAt && b.statusAt > seenB).forEach(b =>
       out.push({ ic: b.status === 'confirmed' ? '✅' : (b.status === 'rejected' ? '❌' : '🏁'),
                  text:`${b.placeName}: ${statusLabel(b.status)}`, ts:b.statusAt, go:'profile' }));
   }
@@ -3067,23 +3137,39 @@ function toggleNotifs(){
       </div>`).join('');
 }
 
+/* คลิกการแจ้งเตือนอันใดอันหนึ่ง → อ่านเฉพาะอันนั้น (หรือบทสนทนา/หมวดที่เกี่ยวข้อง)
+   เดิมโค้ดเรียก markAllRead() ทุกครั้งที่คลิก ทำให้อ่านการแจ้งเตือน 1 อัน
+   แล้วตัวเลขของ "ทุกอัน" (ทุกบทสนทนา + ทุกการจอง) หายไปพร้อมกันหมดทันที */
 function gotoNotif(go, user){
   document.getElementById('notif-panel').classList.remove('open');
   const me = currentUser();
-  markAllRead();
+  if(!me) return;
+
+  if(go === 'chat'){
+    markChatSeen(me.role === 'admin' && user ? user : me.username);
+  }else if(go === 'booking' || go === 'profile'){
+    markBookingSeen(me.username);
+  }
+  renderBell();
+
   if(go === 'profile'){ openProfile(); return }
-  if(me && me.role === 'admin' && (go === 'chat' || go === 'booking')){
+  if(me.role === 'admin' && (go === 'chat' || go === 'booking')){
     openAdmin();
     switchTab(go === 'chat' ? 'chats' : 'bookings');
     if(go === 'chat' && user) openUserChat(user);
   }
 }
 
+/* ปุ่ม "อ่านทั้งหมด" ในแผงแจ้งเตือน — อันนี้ตั้งใจล้างทุกอย่างจริงๆ ตามชื่อปุ่ม */
 function markAllRead(){
   const me = currentUser();
   if(!me) return;
-  localStorage.setItem('seenNotif_' + me.username, String(Date.now()));
-  if(me.role === 'admin') localStorage.setItem('adminSeenChat', String(Date.now()));
+  if(me.role === 'admin'){
+    chatUserList().forEach(x => markChatSeen(x.user));
+  }else{
+    markChatSeen(me.username);
+  }
+  markBookingSeen(me.username);
   renderBell();
   const p = document.getElementById('notif-panel');
   if(p.classList.contains('open')) document.getElementById('notif-list').innerHTML =
