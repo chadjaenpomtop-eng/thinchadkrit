@@ -1704,6 +1704,23 @@ const DEFAULT_PLACES = RAW_PLACES.map(([id, name, price, tags, desc, img, lat, l
   map_url: osmEmbed(lat, lng),
 }));
 
+/* ===== ที่พักจริงที่เปิดให้บริการอยู่ในปัจจุบัน (ข้อมูล+รูปจากเว็บทางการของโรงแรม ไม่ใช่ข้อมูลจำลอง) ===== */
+DEFAULT_PLACES.push({
+  id: 21,
+  name: 'ดุสิต ปริ๊นเซส พัทลุง',
+  price: 3600,
+  tags: ['ที่พักจริงปัจจุบัน','โรงแรม 4 ดาว','สระว่ายน้ำ','ใกล้ทะเลน้อย'],
+  desc: 'โรงแรมสไตล์ "รีสอร์ทใจกลางเมือง" แบรนด์ดุสิตสาขาแรกในภาคใต้ ห้องพักกว้างขวางกว่า 130 ห้อง มีสระว่ายน้ำและห้องอาหารฉีเชี้ยวเสิร์ฟอาหารไทย-จีนสไตล์พัทลุง ห่างจากทะเลน้อยและเขตรักษาพันธุ์นกน้ำเพียงราว 40 นาที (ราคาเป็นค่าประมาณ ผู้ดูแลระบบสามารถแก้ไขได้ในหลังบ้าน)',
+  img_url: 'https://www.dusit.com/dusitprincess-phatthalung/wp-content/uploads/sites/68/2026/01/Overview-1.jpg',
+  images: [
+    'https://www.dusit.com/dusitprincess-phatthalung/wp-content/uploads/sites/68/2026/01/Facilities-02-1.jpg',
+    'https://www.dusit.com/dusitprincess-phatthalung/wp-content/uploads/sites/68/2026/01/Room-1.jpg',
+    'https://www.dusit.com/dusitprincess-phatthalung/wp-content/uploads/sites/68/2026/01/Restaurant-01.jpg',
+    'https://www.dusit.com/dusitprincess-phatthalung/wp-content/uploads/sites/68/2026/01/Facilities-01.jpg',
+  ],
+  map_url: osmEmbed(7.604064, 100.066045),
+});
+
 /* คืน "สำเนา" ของข้อมูลต้นแบบเสมอ
    ถ้าใช้ตัวแปรตรงๆ เมื่อแอดมินแก้ข้อมูล ตัวต้นแบบจะถูกแก้ตามไปด้วย
    ทำให้ปุ่มรีเซ็ตคืนค่าเดิมไม่ได้ */
