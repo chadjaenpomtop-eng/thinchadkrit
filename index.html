@@ -536,9 +536,30 @@ td select.frame-sel{
 
 /* 🖼️ แกลเลอรีหลายรูป */
 .gal{position:relative}
-.gal-thumbs{display:flex;gap:6px;padding:8px 16px 0}
+.gal-main{position:relative;line-height:0}
+.gal-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;border-radius:50%;border:none;
+  background:rgba(20,40,30,.45);color:#fff;font-size:21px;line-height:1;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .15s,transform .15s;-webkit-tap-highlight-color:transparent;
+}
+.gal-arrow:hover{background:rgba(20,40,30,.72)}
+.gal-arrow:active{transform:translateY(-50%) scale(.9)}
+.gal-arrow.prev{left:10px}
+.gal-arrow.next{right:10px}
+.gal-count{
+  position:absolute;right:10px;bottom:10px;background:rgba(20,40,30,.55);color:#fff;
+  font-size:11.5px;padding:3px 10px;border-radius:99px;font-family:'Prompt',sans-serif;
+}
+.gal-thumbs{
+  display:flex;gap:6px;padding:8px 16px 0;
+  overflow-x:auto;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+}
+.gal-thumbs::-webkit-scrollbar{height:5px}
+.gal-thumbs::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
 .gal-thumbs img{
-  width:46px;height:34px;object-fit:cover;border-radius:7px;cursor:pointer;
+  width:46px;height:34px;object-fit:cover;border-radius:7px;cursor:pointer;flex-shrink:0;
   border:2px solid transparent;transition:border-color .15s,transform .15s;
 }
 .gal-thumbs img:hover{transform:translateY(-2px)}
@@ -1215,7 +1236,12 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
       </div>
       <div class="detail-content" id="detail-content">
         <div class="gal">
-          <img id="d-img" src="" alt="รูปที่พัก">
+          <div class="gal-main">
+            <img id="d-img" src="" alt="รูปที่พัก">
+            <button class="gal-arrow prev" onclick="galPrev()" aria-label="รูปก่อนหน้า" title="รูปก่อนหน้า">‹</button>
+            <button class="gal-arrow next" onclick="galNext()" aria-label="รูปถัดไป" title="รูปถัดไป">›</button>
+            <div class="gal-count" id="gal-count"></div>
+          </div>
           <div class="gal-thumbs" id="d-thumbs"></div>
         </div>
         <div class="detail-inner">
@@ -2681,19 +2707,52 @@ function placeImages(p){
   (p.images || []).forEach(u => { if(u && !list.includes(u)) list.push(u) });
   return list;
 }
+
+/* สถานะแกลเลอรีปัจจุบัน เก็บรายการรูป + รูปที่กำลังดู เพื่อให้ปุ่มลูกศร ‹ › เลื่อนดูได้ */
+const galState = { imgs: [], idx: 0 };
+
 function renderGallery(p){
   const box = document.getElementById('d-thumbs');
   const main = document.getElementById('d-img');
+  const prev = document.querySelector('.gal-arrow.prev');
+  const next = document.querySelector('.gal-arrow.next');
+  const count = document.getElementById('gal-count');
   if(!box || !main) return;
-  const imgs = placeImages(p);
-  if(imgs.length < 2){ box.innerHTML = ''; return }
-  box.innerHTML = imgs.map((u, i) =>
+
+  galState.imgs = placeImages(p);
+  galState.idx = 0;
+
+  const multi = galState.imgs.length > 1;
+  if(prev) prev.style.display = multi ? 'flex' : 'none';
+  if(next) next.style.display = multi ? 'flex' : 'none';
+  if(count) count.style.display = multi ? 'block' : 'none';
+
+  box.innerHTML = multi ? galState.imgs.map((u, i) =>
     `<img src="${esc(u)}" class="${i === 0 ? 'on' : ''}" alt="รูป ${i+1}"
-       onerror="this.style.display='none'"
-       onclick="document.getElementById('d-img').src=this.src;
-                [...this.parentNode.children].forEach(x=>x.classList.remove('on'));
-                this.classList.add('on')">`).join('');
+       onerror="this.style.display='none'" onclick="galShow(${i})">`).join('') : '';
+
+  galShow(0);
 }
+
+/* ไปดูรูปลำดับที่ i (วนกลับหัวท้ายเมื่อสุดขอบ) — อัปเดตรูปหลัก, ป้ายจำนวน, และไฮไลต์ thumbnail */
+function galShow(i){
+  const imgs = galState.imgs;
+  if(!imgs.length) return;
+  galState.idx = (i + imgs.length) % imgs.length;
+
+  const main = document.getElementById('d-img');
+  if(main) main.src = imgs[galState.idx];
+
+  const count = document.getElementById('gal-count');
+  if(count) count.textContent = imgs.length > 1 ? `${galState.idx + 1} / ${imgs.length}` : '';
+
+  const thumbs = document.querySelectorAll('#d-thumbs img');
+  thumbs.forEach((t, i2) => t.classList.toggle('on', i2 === galState.idx));
+  const active = thumbs[galState.idx];
+  if(active) active.scrollIntoView({ block:'nearest', inline:'center', behavior:'smooth' });
+}
+function galPrev(){ galShow(galState.idx - 1) }
+function galNext(){ galShow(galState.idx + 1) }
 
 /* พยากรณ์อากาศจริงจาก Open-Meteo (ฟรี ไม่ต้องมี API key) */
 const WX = {0:['☀️','แดดจัด'],1:['🌤️','แดดบางส่วน'],2:['⛅','มีเมฆบางส่วน'],3:['☁️','เมฆมาก'],
