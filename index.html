@@ -680,6 +680,7 @@ td select.frame-sel{
 .chat-head{
   padding:14px 20px;border-bottom:1px solid var(--line);
   display:flex;align-items:center;gap:12px;background:#eef7f0;
+  flex-shrink:0;
 }
 .bot-avatar{
   width:42px;height:42px;border-radius:50%;background:var(--green-500);
@@ -694,6 +695,7 @@ td select.frame-sel{
 .chat-body{
   flex:1;overflow-y:auto;padding:20px;
   display:flex;flex-direction:column;gap:14px;
+  min-height:0;
   background:
     radial-gradient(circle at 85% 12%, #e6f3ea 0, transparent 30%),
     radial-gradient(circle at 8% 85%, #eaf5ee 0, transparent 35%),
@@ -747,13 +749,14 @@ td select.frame-sel{
 
 .chat-input{
   display:flex;gap:10px;padding:14px 16px;border-top:1px solid var(--line);background:#eef7f0;
+  flex-shrink:0;
 }
 .chat-input input{
   flex:1;border:1.5px solid var(--line);border-radius:12px;padding:11px 15px;
   font-family:'Sarabun',sans-serif;font-size:14.5px;background:#fff;color:var(--ink);
 }
 .chat-input input:focus{outline:2px solid var(--green-500);border-color:transparent}
-.quick-row{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 0;background:#eef7f0}
+.quick-row{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 0;background:#eef7f0;flex-shrink:0}
 .chip{
   font-size:12.5px;background:#fff;border:1px solid var(--line);color:var(--green-700);
   padding:5px 12px;border-radius:99px;cursor:pointer;font-family:'Prompt',sans-serif;
