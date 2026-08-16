@@ -1396,6 +1396,7 @@ body.drawer-open .drawer-backdrop{display:block;opacity:1}
         <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap">
           <button class="btn small" id="np-save" onclick="adminSavePlace()">💾 บันทึกสถานที่</button>
           <button class="btn ghost small" id="np-cancel" style="display:none" onclick="cancelEditPlace()">ยกเลิกการแก้ไข</button>
+          <button class="btn amber small" onclick="adminImportNewPlaces()">📥 นำเข้าที่พักใหม่ (ไม่ทับของเดิม)</button>
         </div>
       </div>
       <table>
@@ -3735,6 +3736,22 @@ function adminSavePlace(){
 
 /* คงชื่อเดิมไว้เผื่อมีการเรียกจากที่อื่น */
 function adminAddPlace(){ adminSavePlace() }
+
+/* เพิ่มที่พักที่มีอยู่ใน defaultPlaces() แต่ยังไม่มีในฐานข้อมูลจริง (เทียบจากชื่อ)
+   ใช้ตอนอัปเดตโค้ดแล้วเพิ่มที่พักชุดใหม่เข้าไป แต่ฐานข้อมูลจริงมีข้อมูลอยู่แล้วจึงไม่ถูก
+   seed อัตโนมัติ — ปุ่มนี้เพิ่มเฉพาะรายการใหม่แบบ "เติมเข้าไป" ไม่แตะ/ไม่ทับที่พักเดิมเลย */
+function adminImportNewPlaces(){
+  const me = currentUser();
+  if(!me || me.role !== 'admin'){ alert('เฉพาะผู้ดูแลระบบเท่านั้น'); return }
+  const existingNames = new Set(DB.get('places').map(p => p && p.name));
+  const toAdd = defaultPlaces().filter(p => !existingNames.has(p.name));
+  if(toAdd.length === 0){ alert('ไม่มีที่พักใหม่ให้นำเข้าเพิ่มครับ (มีครบแล้ว)'); return }
+  if(!confirm(`พบที่พักใหม่ ${toAdd.length} แห่งที่ยังไม่มีในระบบ\n\nจะเพิ่มเข้าไปเท่านั้น ไม่ลบ/ไม่แก้ที่พักเดิมที่มีอยู่แล้วแม้แต่รายการเดียว\n\nยืนยันหรือไม่?`)) return;
+  toAdd.forEach(p => DB.add('places', p));
+  renderAdminPlaces();
+  renderAdminStats();
+  botSay(`นำเข้าที่พักใหม่ ${toAdd.length} แห่งเรียบร้อยแล้วครับ 🏡 ลองพิมพ์ "ดูที่พักทั้งหมด" ได้เลย`);
+}
 
 function adminDelPlace(id){
   if(!confirm('ยืนยันการลบสถานที่พักนี้?')) return;
